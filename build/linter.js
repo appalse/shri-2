@@ -104,7 +104,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\r\n\r\nfunction lint(jsonString) {\r\n\tlet result = [\r\n\t\t{\r\n\t\t\t\"code\": \"WARNING.TEXT_SIZES_SHOULD_BE_EQUAL\",\r\n\t\t\t\"error\": \"Тексты в блоке warning должны быть одного размера\",\r\n\t\t\t\"location\": {\r\n\t\t\t\t\"start\": { \"column\": 1, \"line\": 1 },\r\n\t\t\t\t\"end\": { \"column\": 2, \"line\": 22 }\r\n\t\t\t}\r\n\t\t}\r\n\t];\r\n\r\n\treturn result;\r\n}\r\n\r\nmodule.exports = lint;\n\n//# sourceURL=webpack://lint/./src/index.js?");
+eval("\r\n\r\nfunction lint(jsonString) {\r\n\tconsole.log('LINT FUNCTION');\r\n\tconsole.log('input data: ', jsonString);\r\n\tlet result = [\r\n\t\t{\r\n\t\t\t\"code\": \"WARNING.TEXT_SIZES_SHOULD_BE_EQUAL\",\r\n\t\t\t\"error\": \"Тексты в блоке warning должны быть одного размера\",\r\n\t\t\t\"location\": {\r\n\t\t\t\t\"start\": { \"column\": 1, \"line\": 1 },\r\n\t\t\t\t\"end\": { \"column\": 2, \"line\": 22 }\r\n\t\t\t}\r\n\t\t}\r\n\t];\r\n\r\n\treturn result;\r\n}\r\n\r\nmodule.exports = lint;\n\n//# sourceURL=webpack://lint/./src/index.js?");
 
 /***/ })
 

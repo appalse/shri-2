@@ -1,6 +1,8 @@
 'use strict'
 
 function lint(jsonString) {
+	console.log('LINT FUNCTION');
+	console.log('input data: ', jsonString);
 	let result = [
 		{
 			"code": "WARNING.TEXT_SIZES_SHOULD_BE_EQUAL",
