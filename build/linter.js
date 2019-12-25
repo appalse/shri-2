@@ -1,5 +1,14 @@
-exports["lint"] =
-/******/ (function(modules) { // webpackBootstrap
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define("lint", [], factory);
+	else if(typeof exports === 'object')
+		exports["lint"] = factory();
+	else
+		root["lint"] = factory();
+})((typeof self !== 'undefined' ? self : this), function() {
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -100,3 +109,4 @@ eval("\r\n\r\nfunction lint(jsonString) {\r\n\tlet result = [\r\n\t\t{\r\n\t\t\t
 /***/ })
 
 /******/ });
+});

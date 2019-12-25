@@ -11,6 +11,8 @@ module.exports = {
         path: path.resolve(__dirname, 'build'),
         filename: 'linter.js',
         library: 'lint',
-        libraryTarget: 'commonjs',
+        libraryTarget: 'umd',
+        umdNamedDefine: true,
+        globalObject: `(typeof self !== 'undefined' ? self : this)`
     }
   };

@@ -30,7 +30,7 @@ describe('First test', () => {
                 }
             ]
         }`;
-        const result = lint.lint(json);
+        const result = lint(json);
         expect(result).to.be.an('array');
         expect(result).to.equal([]);
     }) 
