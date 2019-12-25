@@ -1,0 +1,29 @@
+{
+  "name": "shri2",
+  "version": "1.0.0",
+  "description": "solution for task 2 from shri 2020 winter",
+  "main": "build/linter.js",
+  "scripts": {
+    "test": "mocha",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/appalse/shri-2.git"
+  },
+  "author": "Natalia Karaseva <natalia.kutina13@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/appalse/shri-2/issues"
+  },
+  "homepage": "https://github.com/appalse/shri-2#readme",
+  "dependencies": {
+    "chai": "^4.2.0"
+  },
+  "devDependencies": {
+    "clean-webpack-plugin": "^3.0.0",
+    "html-webpack-plugin": "^3.2.0",
+    "webpack": "^4.41.4",
+    "webpack-cli": "^3.3.10"
+  }
+}
