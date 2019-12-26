@@ -54,6 +54,8 @@
 
 ### Плагины
 
-clean-webpack-plugin - плагин webpack, который чистит папку с результатами сборки. Упоминался в документации к webpack, поэтому взят оттуда.
+* clean-webpack-plugin - плагин webpack, который чистит папку с результатами сборки. Упоминался в документации к webpack, поэтому взят оттуда.
 
-Для генерации бандла, который можно запустить в html и в node.js, применено решение [отсюда](https://stackoverflow.com/questions/49111086/webpack-4-universal-library-target).
+* Для генерации бандла, который можно запустить в html и в node.js, применено решение [отсюда](https://stackoverflow.com/questions/49111086/webpack-4-universal-library-target).
+
+* mochawesome - модуль для генерации отчета о тестировании. Выбирала по скриншотам, у mochawesome самые удобные и понятны отчеты. 
