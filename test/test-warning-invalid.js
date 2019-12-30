@@ -16,7 +16,7 @@ describe('Invalid input of warning block', () => {
 */
     describe('WARNING.TEXT_SIZES_SHOULD_BE_EQUAL', () => {
         it('2 blocks of different sizes', () => {
-            const inputJson = `{
+                const inputJson = `{
                 "block": "warning",
                 "content": [
                     {
@@ -39,19 +39,18 @@ describe('Invalid input of warning block', () => {
                 ]
             }`;
             const result = lint(inputJson);
-            expect(result).to.be.an('array').that.is.equal([
+            expect(result).to.be.an('array').that.is.deep.equal([
                 {
                     "code": "WARNING.TEXT_SIZES_SHOULD_BE_EQUAL",
                     "error": "Тексты в блоке warning должны быть одного размера и должны быть заданы",
                     "location": {
                         "start": { "column": 1, "line": 1 },
-                        "end": { "column": 2, "line": 22 }
+                        "end": { "column": 14, "line": 22 }
                     }
                 }
             ]);
-            console.log('FINISHED');
         }) /* it */
-/*
+
         it('3 blocks of different sizes', () => {
             const inputJson = `{
                 "block": "warning",
@@ -80,49 +79,20 @@ describe('Invalid input of warning block', () => {
                 ]
             }`;
             const result = lint(inputJson);
-            expect(result).to.be.an('array').that.is.equal([
+            expect(result).to.be.an('array').that.is.deep.equal([
                 {
                     "code": "WARNING.TEXT_SIZES_SHOULD_BE_EQUAL",
                     "error": "Тексты в блоке warning должны быть одного размера и должны быть заданы",
                     "location": {
                         "start": { "column": 1, "line": 1 },
-                        "end": { "column": 2, "line": 26 }
+                        "end": { "column": 14, "line": 26 }
                     }
                 }
             ]);
         }) /* it */
         
-  /*      it('size is not set', () => {
-            const inputJson = `{
-                "block": "warning",
-                "content": [
-                    {
-                        "elem": "content",
-                        "content": [
-                            {
-                                "block": "text",
-                                "mods": { "size": "m" }
-                            },
-                            {
-                                "block": "text",
-                            }
-                        ]
-                    }
-                ]
-            }`;
-            const result = lint(inputJson);
-            expect(result).to.be.an('array').that.is.equal([
-                {
-                    "code": "WARNING.TEXT_SIZES_SHOULD_BE_EQUAL",
-                    "error": "Тексты в блоке warning должны быть одного размера и должны быть заданы",
-                    "location": {
-                        "start": { "column": 1, "line": 1 },
-                        "end": { "column": 2, "line": 17 }
-                    }
-                }
-            ]);
-        }) /* it */
-/*
+        
+
         it('nested warning blocks, empty lines', () => {
             const inputJson = `
             {
@@ -148,12 +118,12 @@ describe('Invalid input of warning block', () => {
                 }
             }`;
             const result = lint(inputJson);
-            expect(result).to.be.an('array').that.is.equal([
+            expect(result).to.be.an('array').that.is.deep.equal([
                 {
                     "code": "WARNING.TEXT_SIZES_SHOULD_BE_EQUAL",
                     "error": "Тексты в блоке warning должны быть одного размера и должны быть заданы",
                     "location": {
-                        "start": { "column": 28, "line": 3 },
+                        "start": { "column": 28, "line": 4 },
                         "end": { "column": 18, "line": 22 }
                     }
                 }

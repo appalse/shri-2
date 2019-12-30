@@ -71,7 +71,29 @@ describe('Valid input of warning block', () => {
             
             const result = lint(inputJson);
             expect(result).to.be.an('array').that.is.empty;
-        })
+        }) /* it */
+
+        it('size is not set', () => {
+            const inputJson = `{
+                "block": "warning",
+                "content": [
+                    {
+                        "elem": "content",
+                        "content": [
+                            {
+                                "block": "text",
+                                "mods": { "size": "m" }
+                            },
+                            {
+                                "block": "text"
+                            }
+                        ]
+                    }
+                ]
+            }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.empty;
+        }) /* it */
 
     }) /* describe: Same size of text blocks */
     
