@@ -195,6 +195,70 @@ describe('INVALID input of warning block', () => {
             ]);
         }) /* it */
 
+        it('Text blocks without size', () => {
+            const inputJson = `{
+                "block": "warning",
+                "content": [
+                    {
+                        "block": "card",
+                        "content": 
+                        {
+                            "elem": "content",
+                            "content": 
+                                {
+                                    "block": "text"
+                                }
+                        }
+                    },
+                    {
+                        "block": "text"
+                    }
+                ]
+            }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.deep.equal([
+                {
+                    "code": "WARNING.TEXT_SIZES_SHOULD_BE_EQUAL",
+                    "error": "Тексты в блоке warning должны быть одного размера и должны быть заданы",
+                    "location": {
+                        "start": { "column": 1, "line": 1 },
+                        "end": { "column": 14, "line": 19 }
+                    }
+                }
+            ]);
+        }) /* it */
+
+        it('size is not set', () => {
+            const inputJson = `{
+                "block": "warning",
+                "content": [
+                    {
+                        "elem": "content",
+                        "content": [
+                            {
+                                "block": "text",
+                                "mods": { "size": "m" }
+                            },
+                            {
+                                "block": "text"
+                            }
+                        ]
+                    }
+                ]
+            }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.deep.equal([
+                {
+                    "code": "WARNING.TEXT_SIZES_SHOULD_BE_EQUAL",
+                    "error": "Тексты в блоке warning должны быть одного размера и должны быть заданы",
+                    "location": {
+                        "start": { "column": 1, "line": 1 },
+                        "end": { "column": 14, "line": 17 }
+                    }
+                }
+            ]);
+        }) /* it */
+
     }) /* describe: WARNING.TEXT_SIZES_SHOULD_BE_EQUAL */
 
 

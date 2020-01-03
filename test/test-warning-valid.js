@@ -75,28 +75,6 @@ describe('VALID input of WARNING block', () => {
             expect(result).to.be.an('array').that.is.empty;
         }) /* it */  
 
-        it('size is not set', () => {
-            const inputJson = `{
-                "block": "warning",
-                "content": [
-                    {
-                        "elem": "content",
-                        "content": [
-                            {
-                                "block": "text",
-                                "mods": { "size": "m" }
-                            },
-                            {
-                                "block": "text"
-                            }
-                        ]
-                    }
-                ]
-            }`;
-            const result = lint(inputJson);
-            expect(result).to.be.an('array').that.is.empty;
-        }) /* it */
-
         it('no warning block with non-equal text sizes', () => {  
             const inputJson = `
             { 
