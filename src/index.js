@@ -29,6 +29,7 @@ function updateParent(nodeLocation, blockName, parents) {
 		copyLocation(nodeLocation, parents[blockName].loc);
 	} else {
 		let newParent = {
+			'etalonTextSize': undefined,
 			'preceding': [],
 			'loc': { 'start': {'line': 0, 'column': 0}, 'end': {'line': 0, 'column': 0}}
 		};
@@ -46,9 +47,18 @@ function addPreceding(nodeLocation, blockName, parent) {
 	parent['preceding'].push(newPreceding);
 }
 
+function addEtalonTextSize(node, parent) {
+	if (parent['etalonTextSize']) {
+		return; /* эталонный размер текста уже задан */
+	}
+	let modsSize = utils.extractModsSize(node);
+	if (modsSize) {
+		parent['etalonTextSize'] = modsSize;
+	} 
+}
+
 function processArrayOfNodes(contentArray, parents, errorsList) {
 
-	warningBlock.checkEqualTextSizes(contentArray, parents, errorsList);
 	warningBlock.checkButtonSize(contentArray, parents, errorsList);
 	
 	/* Вызываем обработку дальше в грубину */
@@ -76,9 +86,13 @@ function processNode(node, parents, errorsList) {
 	if (parents['warning'] && utils.isButtonBlock(node)) {
 		addPreceding(node.loc, 'button', parents['warning']);
 	}
+	if (parents['warning'] && !parents.warning['etalonTextSize'] && utils.isTextBlock(node)) {
+		addEtalonTextSize(node, parents['warning']);
+	}
 
-	warningBlock.checkPlaceholderSize(node, parents, errorsList);
+	warningBlock.checkTextSize(node, parents, errorsList);
 	warningBlock.checkButtonPosition(node, parents, errorsList);
+	warningBlock.checkPlaceholderSize(node, parents, errorsList);	
 
 	const contentField = utils.extractContent(node.children);
 	if (contentField) {

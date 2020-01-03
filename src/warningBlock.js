@@ -3,25 +3,46 @@
 const utils = require('./utils.js');
 const errors = require('./errors.js');
 
-function checkEqualTextSizes(contentArray, parents, errorsList) {
-    /* Заполняем структуры */
-	let textBlocks = {
-		count: 0,
-		sizes: new Set(),
-	};
-	contentArray.forEach((node, index) => {
-        const textBlockSize = utils.getTextBlockSize(node);
-        if (textBlockSize) {
-            textBlocks.count += 1;
-            textBlocks.sizes.add(textBlockSize);
+// check if an element exists in array using a comparer function
+// comparer : function(currentElement)
+Array.prototype.inArray = function(element, comparer) { 
+    for (let i = 0; i < this.length; i++) { 
+        if (comparer(element, this[i])) {
+            return true; 
         }
-	});
+    }
+    return false; 
+}; 
 
-	/* Проверяем структуры и дополняем errorsList */
-	/* set.size должен быть = 1 или 0 */
-	if (parents['warning'] && textBlocks.count > 1 && textBlocks.sizes.size > 1) {
-		errorsList.push(errors.getError(errors.WARNING_EQUAL_TEXT_SIZE, parents['warning'].loc));
-	}
+// adds an element to the array if it does not already exist using a comparer function
+Array.prototype.pushIfNotExist = function(element, comparer) { 
+    if (!this.inArray(element, comparer)) {
+        this.push(element);
+    }
+};
+
+function errorComparer(newError, error) {
+    return error.code === newError.code 
+            && error.error === newError.error
+            && error.location.start.column === newError.location.start.column
+            && error.location.start.line === newError.location.start.line
+            && error.location.end.column === newError.location.end.column
+            && error.location.end.line === newError.location.end.line;
+}
+
+function checkTextSize(node, parents, errorsList) {
+    if (parents['warning'] 
+        && parents.warning['etalonTextSize'] 
+        && utils.isTextBlock(node)) {
+            let modsSize = utils.extractModsSize(node);
+            if (modsSize) {
+                /* Должно быть равно эталонному */
+                if (modsSize !== parents.warning['etalonTextSize']) {
+                    const newError = errors.getError(errors.WARNING_EQUAL_TEXT_SIZE, parents['warning'].loc);
+                    errorsList.pushIfNotExist(newError, errorComparer)
+                }
+            }
+    }
 }
 
 function checkButtonSize(contentArray, parents, errorsList) {
@@ -87,7 +108,7 @@ function checkPlaceholderSize(node, parents, errorsList) {
 
 
 module.exports = {
-    checkEqualTextSizes,
+    checkTextSize,
     checkButtonSize,
     checkButtonPosition,
     checkPlaceholderSize
