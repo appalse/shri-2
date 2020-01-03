@@ -32,16 +32,17 @@ function errorComparer(newError, error) {
 
 function checkTextSize(node, parents, errorsList) {
     if (parents['warning'] 
-        && parents.warning['etalonTextSize'] 
         && utils.isTextBlock(node)) {
             let modsSize = utils.extractModsSize(node);
-            if (modsSize) {
-                /* Должно быть равно эталонному */
-                if (modsSize !== parents.warning['etalonTextSize']) {
-                    const newError = errors.getError(errors.WARNING_EQUAL_TEXT_SIZE, parents['warning'].loc);
-                    errorsList.pushIfNotExist(newError, errorComparer)
-                }
-            }
+            const newError = errors.getError(errors.WARNING_EQUAL_TEXT_SIZE, parents['warning'].loc);
+            if (!modsSize
+                || modsSize 
+                    && parents.warning['etalonTextSize'] 
+                    && modsSize !== parents.warning['etalonTextSize']) {
+                        /* Должно быть равно эталонному и быть задано */
+                        errorsList.pushIfNotExist(newError, errorComparer);
+            } 
+                
     }
 }
 
