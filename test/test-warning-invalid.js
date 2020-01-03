@@ -129,7 +129,7 @@ describe('INVALID input of warning block', () => {
                 "content": 
                 {
                     "block": "text",
-                    "mods": { "size": "s" }
+                    "mods": { "size": "s" },
                     "content": 
                     {
                         "elem": "content",

@@ -140,10 +140,10 @@ describe('VALID input of WARNING block', () => {
             expect(result).to.be.an('array').that.is.empty;
         }) /* it */
 
-        it('Valid button sizes', () => {  
+        it('Valid button size s', () => {  
             const inputJson = `{
                 "block": "warning",
-                "content": [
+                "content": 
                     {
                         "block": "warning",
                         "content": [
@@ -151,52 +151,92 @@ describe('VALID input of WARNING block', () => {
                             { "block": "button", "mods": { "size": "s" } },
                             { "block": "button", "mods": { "size": "s" } }
                         ]
-                    },
+                    }
+            }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.empty;
+        }) /* it */
+
+        it('Valid button size m', () => {  
+            const inputJson = `{
+                "block": "warning",
+                "content": 
                     {
                         "block": "warning",
                         "content": [
                             { "block": "text", "mods": { "size": "s" } },
                             { "block": "button", "mods": { "size": "m" } },
-                            { "block": "button", "mods": { "size": "m" } },
                             { "block": "button", "mods": { "size": "m" } }
                         ]
-                    },
+                    }
+            }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.empty;
+        }) /* it */
+
+        it('Valid button size l', () => {  
+            const inputJson = `{
+                "block": "warning",
+                "content": 
                     {
                         "block": "warning",
                         "content": [
                             { "block": "text", "mods": { "size": "m" } },
+                            { "block": "button", "mods": { "size": "l" } },
                             { "block": "button", "mods": { "size": "l" } }
                         ]
-                    },
+                    }
+            }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.empty;
+        }) /* it */
+
+        it('Valid button size xl', () => {  
+            const inputJson = `{
+                "block": "warning",
+                "content": 
                     {
                         "block": "warning",
                         "content": [
                             { "block": "text", "mods": { "size": "l" } },
+                            { "block": "button", "mods": { "size": "xl" } },
                             { "block": "button", "mods": { "size": "xl" } }
                         ]
-                    },
+                    }
+            }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.empty;
+        }) /* it */
+
+        it('Valid button size xxl', () => {  
+            const inputJson = `{
+                "block": "warning",
+                "content": 
                     {
                         "block": "warning",
                         "content": [
                             { "block": "text", "mods": { "size": "xl" } },
+                            { "block": "button", "mods": { "size": "xxl" } },
                             { "block": "button", "mods": { "size": "xxl" } }
                         ]
-                    },
+                    }
+            }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.empty;
+        }) /* it */
+
+        it('Valid button size xxxl', () => {  
+            const inputJson = `{
+                "block": "warning",
+                "content": 
                     {
                         "block": "warning",
                         "content": [
                             { "block": "text", "mods": { "size": "xxl" } },
+                            { "block": "button", "mods": { "size": "xxxl" } },
                             { "block": "button", "mods": { "size": "xxxl" } }
                         ]
-                    },
-                    {
-                        "block": "warning",
-                        "content": [
-                            { "block": "text", "mods": { "size": "xxxl" } },
-                            { "block": "button", "mods": { "size": "xxxxl" } }
-                        ]
                     }
-                ]
             }`;
             const result = lint(inputJson);
             expect(result).to.be.an('array').that.is.empty;
