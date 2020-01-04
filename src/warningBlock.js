@@ -46,12 +46,9 @@ function checkTextSize(node, parents, errorsList) {
     }
 }
 
-function checkButtonSize(contentArray, parents, errorsList) {
-    let invalidButtonSizes = {
-		etalonSize: undefined,
-		ids: [],
-    };
+function checkButtonSize(node, parents, errorsList) {
     const steps = {
+        'xxs': 'xs',
         'xs': 's',
         's': 'm',
         'm': 'l',
@@ -59,28 +56,24 @@ function checkButtonSize(contentArray, parents, errorsList) {
         'xl': 'xxl',
         'xxl': 'xxxl',
         'xxxl': 'xxxxl',
-        'xxxxl': 'xxxxxl'
+        'xxxxl': 'xxxxxl',
+        'xxxxxl': 'xxxxxxl'
     };
-    contentArray.forEach((node, index) => {
-        /* Эталонный размер кнопки может измениться внутри массива */
-        /* если встретится очередной text-блок с другим size, поэтому проверяем */
-        /* на каждой итерации, надо ли обновить значение */
-        const etalonSize = utils.getTextBlockSize(node);
-        if (etalonSize) {
-            invalidButtonSizes.etalonSize = etalonSize;
-        }
-        const buttonSize = utils.getButtonSize(node);
-        if (parents['warning'] && buttonSize 
-            && invalidButtonSizes.etalonSize 
-            && buttonSize !== steps[invalidButtonSizes.etalonSize] ) {
-                invalidButtonSizes.ids.push(index);
-        }
-    });
+    if (parents['warning']
+        && utils.isButtonBlock(node)) {
+            const etalonSize = parents.warning['etalonTextSize']
+            const buttonSize = utils.getButtonSize(node);
+            if (!etalonSize 
+                || etalonSize
+                    && buttonSize
+                    && buttonSize !== etalonSize) {
+                        /* Пополняем errorsList */
+                        errorsList.push(errors.getError(errors.INVALID_BUTTON_SIZE, node.loc));
+            }    
+    }
+
 	
-    /* Пополняем errorsList */
-    invalidButtonSizes.ids.forEach(id => {
-        errorsList.push(errors.getError(errors.INVALID_BUTTON_SIZE, contentArray[id].loc));
-    });
+    
 }
 
 function checkButtonPosition(node, parents, errorsList) {

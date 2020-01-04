@@ -58,9 +58,6 @@ function addEtalonTextSize(node, parent) {
 }
 
 function processArrayOfNodes(contentArray, parents, errorsList) {
-
-	warningBlock.checkButtonSize(contentArray, parents, errorsList);
-	
 	/* Вызываем обработку дальше в грубину */
 	contentArray.forEach(node => processNode(node, parents, errorsList));
 }
@@ -91,6 +88,7 @@ function processNode(node, parents, errorsList) {
 	}
 
 	warningBlock.checkTextSize(node, parents, errorsList);
+	warningBlock.checkButtonSize(node, parents, errorsList);
 	warningBlock.checkButtonPosition(node, parents, errorsList);
 	warningBlock.checkPlaceholderSize(node, parents, errorsList);	
 
