@@ -63,17 +63,13 @@ function checkButtonSize(node, parents, errorsList) {
         && utils.isButtonBlock(node)) {
             const etalonSize = parents.warning['etalonTextSize']
             const buttonSize = utils.getButtonSize(node);
-            if (!etalonSize 
-                || etalonSize
+            if (etalonSize
                     && buttonSize
-                    && buttonSize !== etalonSize) {
+                    && buttonSize !== steps[etalonSize]) {
                         /* Пополняем errorsList */
                         errorsList.push(errors.getError(errors.INVALID_BUTTON_SIZE, node.loc));
             }    
     }
-
-	
-    
 }
 
 function checkButtonPosition(node, parents, errorsList) {

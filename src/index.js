@@ -4,12 +4,22 @@ const utils = require('./utils.js');
 const warningBlock = require('./warningBlock.js');
 
 
-const inputJson = `{
-	"block": "warning",
-	"content": [
-		{ "block": "text", "mods": { "size": "l" } },
-		{ "block": "button", "mods": { "size": "xl" } }
-	]
+const inputJson = `{ 
+	"block": "not-a-warning-block",
+	"content": {  
+		"elem": "content",
+		"content": 
+			[
+				{ 
+					"block": "text",
+					"mods": { "size": "m" }
+				},
+				{  
+					"block": "text",
+					"mods": { "size": "l" }
+				}
+			]
+	}
 }`;
 
 function getParentsCopy(parents) {
@@ -25,8 +35,11 @@ function copyLocation(source, dest) {
 }
 
 function updateParent(nodeLocation, blockName, parents) {
+	const previousParent = parents[blockName] ? getParentsCopy(parents[blockName]) : undefined;
 	if (parents[blockName]) {
-		copyLocation(nodeLocation, parents[blockName].loc);
+		parents[blockName]['etalonTextSize'] = undefined;
+		parents[blockName]['preceding'] = [];
+		copyLocation(nodeLocation, parents[blockName].loc);		
 	} else {
 		let newParent = {
 			'etalonTextSize': undefined,
@@ -36,6 +49,7 @@ function updateParent(nodeLocation, blockName, parents) {
 		copyLocation(nodeLocation, newParent.loc)
 		parents[blockName]  = newParent;
 	}
+	return previousParent;
 }
 
 function addPreceding(nodeLocation, blockName, parent) {
@@ -59,7 +73,9 @@ function addEtalonTextSize(node, parent) {
 
 function processArrayOfNodes(contentArray, parents, errorsList) {
 	/* Вызываем обработку дальше в грубину */
-	contentArray.forEach(node => processNode(node, parents, errorsList));
+	contentArray.forEach(node => {
+		processNode(node, parents, errorsList);
+	});
 }
 
 function processContent(contentField, parents, errorsList) {
@@ -73,11 +89,14 @@ function processContent(contentField, parents, errorsList) {
 }
 
 function processNode(node, parents, errorsList) {
-	const currentParents = getParentsCopy(parents);
+	const currentParents = {
+		previousWarning: 'init',
+		previousPlaceholder: 'init'
+	};
 	if (utils.isWarningBlock(node)) {
-		updateParent(node.loc, 'warning', parents);
+		currentParents.previousWarning = updateParent(node.loc, 'warning', parents);
 	} else if (utils.isPlaceholderBlock(node)) {
-		updateParent(node.loc, 'placeholder', parents);
+		currentParents.previousPlaceholder = updateParent(node.loc, 'placeholder', parents);
 	}
 	
 	if (parents['warning'] && utils.isButtonBlock(node)) {
@@ -96,7 +115,12 @@ function processNode(node, parents, errorsList) {
 	if (contentField) {
 		processContent(contentField, parents, errorsList);
 	}
-	parents = getParentsCopy(currentParents);
+	if (currentParents.previousWarning !==  'init') {
+		parents['warning'] = currentParents.previousWarning;
+	}
+	if (currentParents.previousPlaceholder !==  'init') {
+		parents['placeholder'] = currentParents.previousPlaceholder;
+	}
 }			
 
 function lint(jsonString) {
@@ -114,7 +138,6 @@ function lint(jsonString) {
 	if (parsed.type === 'Object') {
 		processNode(parsed, parents, errorsList);
 	}
-	console.log(errorsList[0]);
 	return errorsList;
 }
 

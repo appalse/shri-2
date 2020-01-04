@@ -97,7 +97,54 @@ describe('VALID input of WARNING block', () => {
             
             const result = lint(inputJson);
             expect(result).to.be.an('array').that.is.empty;
-        }) /* it */       
+        }) /* it */  
+        
+        it('Nested warning blocks with different text sizes', () => {  
+            const inputJson = `
+            { 
+                "block": "warning",
+                "content": 
+                    [
+                        { 
+                            "block": "text",
+                            "mods": { "size": "s" }
+                        },
+                        { 
+                            "block": "warning", 
+                            "elem": "content",
+                            "content": 
+                                [
+                                    {
+                                        "block": "warning",
+                                        "elem": "button-wrapper",
+                                        "content":
+                                            [
+                                                { 
+                                                    "block": "text",
+                                                    "mods": { "size": "m" }
+                                                },
+                                                {  
+                                                    "block": "text",
+                                                    "mods": { "size": "m" }
+                                                },
+                                                {  
+                                                    "block": "text",
+                                                    "mods": { "size": "m" }
+                                                }
+                                            ]
+                                    },
+                                    { 
+                                        "block": "text",
+                                        "mods": { "size": "l" }
+                                    }
+                                ]
+                        }
+                    ]
+            }`;
+            
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.empty;
+        }) /* it */  
 
     }) /* describe: NO - WARNING.TEXT_SIZES_SHOULD_BE_EQUAL */
 
