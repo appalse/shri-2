@@ -7,16 +7,11 @@ const utils = require('./../utils.js');
 const errors = require('./../errors.js');
 
 const steps = {
-    'xxs': 'xs',
     'xs': 's',
     's': 'm',
     'm': 'l',
     'l': 'xl',
-    'xl': 'xxl',
-    'xxl': 'xxxl',
-    'xxxl': 'xxxxl',
-    'xxxxl': 'xxxxxl',
-    'xxxxxl': 'xxxxxxl'
+    'xl': 'xxl'
 };
 
 function checkButtonSize(node, parents, errorsList) {    
