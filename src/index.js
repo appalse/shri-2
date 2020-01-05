@@ -1,25 +1,31 @@
 'use strict'
 const parse = require('json-to-ast');
 const utils = require('./utils.js');
+const blocks = require('./blocks.js');
 const warningBlock = require('./warningBlock.js');
 
 
-const inputJson = `{ 
-	"block": "not-a-warning-block",
-	"content": {  
-		"elem": "content",
-		"content": 
-			[
-				{ 
+const inputJson = `{
+	"block": "warning",
+	"content": [
+		{
+			"block": "placeholder",
+			"mods": { "size": "m" }
+		},
+		{
+			"elem": "content",
+			"content": [
+				{
 					"block": "text",
 					"mods": { "size": "m" }
 				},
-				{  
+				{
 					"block": "text",
 					"mods": { "size": "l" }
 				}
 			]
-	}
+		}
+	]
 }`;
 
 function getParentsCopy(parents) {
@@ -34,12 +40,16 @@ function copyLocation(source, dest) {
 	dest.end.column = source.end.column;
 }
 
-function updateParent(nodeLocation, blockName, parents) {
-	const previousParent = parents[blockName] ? getParentsCopy(parents[blockName]) : undefined;
-	if (parents[blockName]) {
-		parents[blockName]['etalonTextSize'] = undefined;
-		parents[blockName]['preceding'] = [];
-		copyLocation(nodeLocation, parents[blockName].loc);		
+function updateParents(nodeLocation, blockType, parents) {
+	if (blockType !== blocks.BLOCK_TYPE_WARNING
+		&& blockType !== blocks.BLOCK_TYPE_PLACEHOLDER) {
+			return null;
+		}
+	const previousParent = parents[blockType] ? getParentsCopy(parents[blockType]) : undefined;
+	if (parents[blockType]) {
+		parents[blockType]['etalonTextSize'] = undefined;
+		parents[blockType]['preceding'] = [];
+		copyLocation(nodeLocation, parents[blockType].loc);		
 	} else {
 		let newParent = {
 			'etalonTextSize': undefined,
@@ -47,7 +57,7 @@ function updateParent(nodeLocation, blockName, parents) {
 			'loc': { 'start': {'line': 0, 'column': 0}, 'end': {'line': 0, 'column': 0}}
 		};
 		copyLocation(nodeLocation, newParent.loc)
-		parents[blockName]  = newParent;
+		parents[blockType]  = newParent;
 	}
 	return previousParent;
 }
@@ -89,20 +99,13 @@ function processContent(contentField, parents, errorsList) {
 }
 
 function processNode(node, parents, errorsList) {
-	const currentParents = {
-		previousWarning: 'init',
-		previousPlaceholder: 'init'
-	};
-	if (utils.isWarningBlock(node)) {
-		currentParents.previousWarning = updateParent(node.loc, 'warning', parents);
-	} else if (utils.isPlaceholderBlock(node)) {
-		currentParents.previousPlaceholder = updateParent(node.loc, 'placeholder', parents);
-	}
+	const blockType = blocks.getBlockType(node);
+	let currentParents = updateParents(node.loc, blockType, parents);
 	
-	if (parents['warning'] && utils.isButtonBlock(node)) {
+	if (parents['warning'] && blockType === blocks.BLOCK_TYPE_BUTTON) {
 		addPreceding(node.loc, 'button', parents['warning']);
 	}
-	if (parents['warning'] && !parents.warning['etalonTextSize'] && utils.isTextBlock(node)) {
+	if (parents['warning'] && !parents.warning['etalonTextSize'] && blockType === blocks.BLOCK_TYPE_TEXT) {
 		addEtalonTextSize(node, parents['warning']);
 	}
 
@@ -115,11 +118,8 @@ function processNode(node, parents, errorsList) {
 	if (contentField) {
 		processContent(contentField, parents, errorsList);
 	}
-	if (currentParents.previousWarning !==  'init') {
-		parents['warning'] = currentParents.previousWarning;
-	}
-	if (currentParents.previousPlaceholder !==  'init') {
-		parents['placeholder'] = currentParents.previousPlaceholder;
+	if (currentParents !==  null) {
+		parents[blockType] = currentParents;
 	}
 }			
 

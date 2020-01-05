@@ -56,6 +56,8 @@ function extractContent(nodeFields) {
 	return contentFields[0].value;
 }
 
+
+
 module.exports = {
     isSomeBlock,
 	isTextBlock,
@@ -65,5 +67,5 @@ module.exports = {
 	extractModsSize,
 	getTextBlockSize,
 	getButtonSize,
-    extractContent
+	extractContent
 }
