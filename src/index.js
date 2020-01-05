@@ -8,23 +8,8 @@ const warningBlock = require('./warningBlock.js');
 const inputJson = `{
 	"block": "warning",
 	"content": [
-		{
-			"block": "placeholder",
-			"mods": { "size": "m" }
-		},
-		{
-			"elem": "content",
-			"content": [
-				{
-					"block": "text",
-					"mods": { "size": "m" }
-				},
-				{
-					"block": "text",
-					"mods": { "size": "l" }
-				}
-			]
-		}
+		{ "block": "text", "mods": { "size": "m" } },
+		{ "block": "button", "mods": { "size": "" } }
 	]
 }`;
 

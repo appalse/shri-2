@@ -34,12 +34,12 @@ function checkTextSize(node, parents, errorsList) {
     if (parents['warning'] 
         && utils.isTextBlock(node)) {
             let modsSize = utils.extractModsSize(node);
-            const newError = errors.getError(errors.WARNING_EQUAL_TEXT_SIZE, parents['warning'].loc);
             if (!modsSize
                 || modsSize 
                     && parents.warning['etalonTextSize'] 
                     && modsSize !== parents.warning['etalonTextSize']) {
                         /* Должно быть равно эталонному и быть задано */
+                        const newError = errors.getError(errors.WARNING_EQUAL_TEXT_SIZE, parents['warning'].loc);
                         errorsList.pushIfNotExist(newError, errorComparer);
             } 
                 
@@ -63,8 +63,8 @@ function checkButtonSize(node, parents, errorsList) {
         && utils.isButtonBlock(node)) {
             const etalonSize = parents.warning['etalonTextSize']
             const buttonSize = utils.getButtonSize(node);
-            if (etalonSize
-                    && buttonSize
+            if (!buttonSize ||
+                    etalonSize && buttonSize
                     && buttonSize !== steps[etalonSize]) {
                         /* Пополняем errorsList */
                         errorsList.push(errors.getError(errors.INVALID_BUTTON_SIZE, node.loc));
@@ -87,11 +87,9 @@ function checkButtonPosition(node, parents, errorsList) {
 function checkPlaceholderSize(node, parents, errorsList) {
     if (parents['warning'] && utils.isPlaceholderBlock(node)) {
         let modsSize = utils.extractModsSize(node);
-        if (modsSize) {
-            /* Должно быть равно s, m, l */
-            if (modsSize !== 's' && modsSize !== 'm' && modsSize !== 'l') {
-                errorsList.push(errors.getError(errors.INVALID_PLACEHOLDER_SIZE, parents['placeholder'].loc));
-            }
+        /* Должно быть равно s, m, l */
+        if (modsSize !== 's' && modsSize !== 'm' && modsSize !== 'l') {
+            errorsList.push(errors.getError(errors.INVALID_PLACEHOLDER_SIZE, parents['placeholder'].loc));
         }
     }
 }
