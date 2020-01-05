@@ -267,6 +267,27 @@ describe('VALID input of WARNING block', () => {
             expect(result).to.be.an('array').that.is.empty;
         }) /* it */
 
+        it('Text and button on the different levels', () => {  
+            const inputJson = `{
+                "block": "warning",
+                "content": [
+                    { 
+                        "block": "text", 
+                        "mods": { "size": "m" } 
+                    },
+                    { 
+                        "block": "some-deeper-block",
+                        "content": {
+                            "block": "button", 
+                            "mods": { "size": "l" }
+                        }
+                    }
+                ]
+            }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.empty;
+        }) /* it */
+
     }) /* describe: NO - WARNING.INVALID_BUTTON_SIZE */
 
 
@@ -377,6 +398,19 @@ describe('VALID input of WARNING block', () => {
                 "content": {
                     "block": "placeholder",
                     "mods": { "size": "xs" }
+                }
+            }`;
+            
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.empty;
+        }) /* it */
+
+        it('no warning block with valid placeholder size', () => {  
+            const inputJson = `{
+                "block": "not-a-warning-block",
+                "content": {
+                    "block": "placeholder",
+                    "mods": { "size": "s" }
                 }
             }`;
             
