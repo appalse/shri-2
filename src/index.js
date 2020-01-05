@@ -2,7 +2,10 @@
 const parse = require('json-to-ast');
 const utils = require('./utils.js');
 const blocks = require('./blocks.js');
-const warningBlock = require('./warningBlock.js');
+const checkTextSize = require('./warning/checkTextSize.js');
+const checkButtonSize = require('./warning/checkButtonSize.js');
+const checkButtonPosition = require('./warning/checkButtonPosition.js');
+const checkPlaceholderSize = require('./warning/checkPlaceholderSize.js');
 
 
 const inputJson = `{
@@ -94,10 +97,10 @@ function processNode(node, parents, errorsList) {
 		addEtalonTextSize(node, parents['warning']);
 	}
 
-	warningBlock.checkTextSize(node, parents, errorsList);
-	warningBlock.checkButtonSize(node, parents, errorsList);
-	warningBlock.checkButtonPosition(node, parents, errorsList);
-	warningBlock.checkPlaceholderSize(node, parents, errorsList);	
+	checkTextSize(node, parents, errorsList);
+	checkButtonSize(node, parents, errorsList);
+	checkButtonPosition(node, parents, errorsList);
+	checkPlaceholderSize(node, parents, errorsList);	
 
 	const contentField = utils.extractContent(node.children);
 	if (contentField) {
