@@ -6,6 +6,9 @@ const checkTextSize = require('./warning/checkTextSize.js');
 const checkButtonSize = require('./warning/checkButtonSize.js');
 const checkButtonPosition = require('./warning/checkButtonPosition.js');
 const checkPlaceholderSize = require('./warning/checkPlaceholderSize.js');
+const checkTextH1 = require('./text/checkTextH1.js');
+const checkTextH2 = require('./text/checkTextH2.js');
+const checkTextH3 = require('./text/checkTextH3.js');
 
 
 const inputJson = `{
@@ -91,16 +94,19 @@ function processNode(node, parents, errorsList) {
 	let currentParents = updateParents(node.loc, blockType, parents);
 	
 	if (parents['warning'] && blockType === blocks.BLOCK_TYPE_BUTTON) {
-		addPreceding(node.loc, 'button', parents['warning']);
+		addPreceding(node.loc, 'button', parents.warning);
 	}
 	if (parents['warning'] && !parents.warning['etalonTextSize'] && blockType === blocks.BLOCK_TYPE_TEXT) {
-		addEtalonTextSize(node, parents['warning']);
+		addEtalonTextSize(node, parents.warning);
 	}
 
 	checkTextSize(node, parents, errorsList);
 	checkButtonSize(node, parents, errorsList);
 	checkButtonPosition(node, parents, errorsList);
-	checkPlaceholderSize(node, parents, errorsList);	
+	checkPlaceholderSize(node, parents, errorsList);
+	checkTextH1(node, parents, errorsList);
+	checkTextH2(node, parents, errorsList);
+	checkTextH3(node, parents, errorsList);
 
 	const contentField = utils.extractContent(node.children);
 	if (contentField) {

@@ -1,5 +1,29 @@
 'use strict'
 
+Array.prototype.inArray = function(element, comparer) { 
+    for (let i = 0; i < this.length; i++) { 
+        if (comparer(element, this[i])) {
+            return true; 
+        }
+    }
+    return false; 
+}; 
+
+Array.prototype.pushIfNotExist = function(element, comparer) { 
+    if (!this.inArray(element, comparer)) {
+        this.push(element);
+    }
+};
+
+function errorComparer(newError, error) {
+    return error.code === newError.code 
+            && error.error === newError.error
+            && error.location.start.column === newError.location.start.column
+            && error.location.start.line === newError.location.start.line
+            && error.location.end.column === newError.location.end.column
+            && error.location.end.line === newError.location.end.line;
+}
+
 function isSomeBlock(nodeChildren, blockName) {
 	return nodeChildren.some(element => 
 								element.key.value === 'block' 
@@ -16,10 +40,6 @@ function isButtonBlock(node) {
 
 function isPlaceholderBlock(node) {
 	return isSomeBlock(node.children, 'placeholder');
-}
-
-function isWarningBlock(node) {
-	return isSomeBlock(node.children, 'warning');
 }
 
 function extractModsSize(node) {
@@ -59,11 +79,11 @@ function extractContent(nodeFields) {
 
 
 module.exports = {
-    isSomeBlock,
+	errorComparer,
+	isSomeBlock,
 	isTextBlock,
 	isButtonBlock,
 	isPlaceholderBlock,
-    isWarningBlock,
 	extractModsSize,
 	getTextBlockSize,
 	getButtonSize,

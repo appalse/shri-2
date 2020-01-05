@@ -12,7 +12,9 @@ function checkButtonPosition(node, parents, errorsList) {
         && utils.isPlaceholderBlock(node)) {
             parents.warning['preceding'].forEach((precedingNode) => {
                 if (precedingNode.block === 'button') {
-                    errorsList.push(errors.getError(errors.INVALID_BUTTON_POSITION, precedingNode.loc));
+                    errorsList.pushIfNotExist(
+                        errors.getError(errors.INVALID_BUTTON_POSITION, precedingNode.loc), 
+                        utils.errorComparer);
                 }
             });
     }
