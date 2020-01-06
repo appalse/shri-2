@@ -250,23 +250,6 @@ describe('VALID input of WARNING block', () => {
             expect(result).to.be.an('array').that.is.empty;
         }) /* it */
 
-        it('Valid button size xxxl', () => {  
-            const inputJson = `{
-                "block": "warning",
-                "content": 
-                    {
-                        "block": "warning",
-                        "content": [
-                            { "block": "text", "mods": { "size": "xxl" } },
-                            { "block": "button", "mods": { "size": "xxxl" } },
-                            { "block": "button", "mods": { "size": "xxxl" } }
-                        ]
-                    }
-            }`;
-            const result = lint(inputJson);
-            expect(result).to.be.an('array').that.is.empty;
-        }) /* it */
-
         it('Text and button on the different levels', () => {  
             const inputJson = `{
                 "block": "warning",
@@ -288,6 +271,47 @@ describe('VALID input of WARNING block', () => {
             expect(result).to.be.an('array').that.is.empty;
         }) /* it */
 
+        it('Etalon text after button', () => {  
+            const inputJson = `{
+                "block": "warning",
+                "content": [
+                    {
+                        "block": "button", 
+                        "mods": { "size": "l" }
+                    },
+                    { 
+                        "block": "text", 
+                        "mods": { "size": "m" } 
+                    }
+                ]
+            }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.empty;
+        }) /* it */
+
+        it('Etalon text on deeper level after button', () => {  
+            const inputJson = `{
+                "block": "warning",
+                "content": [
+                    {
+                        "block": "button", 
+                        "mods": { "size": "l" }
+                    },
+                    { 
+                        "block": "some-deeper-block",
+                        "content": [
+                            { 
+                                "block": "text", 
+                                "mods": { "size": "m" } 
+                            }
+                        ]
+                    }
+                ]
+            }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.empty;
+        }) /* it */
+
     }) /* describe: NO - WARNING.INVALID_BUTTON_SIZE */
 
 
@@ -299,6 +323,7 @@ describe('VALID input of WARNING block', () => {
             const inputJson = `{
                 "block": "warning",
                 "content": [
+                    { "block": "text", "mods": { "size": "s" } },
                     { "block": "placeholder", "mods": { "size": "m" } },
                     { "block": "button", "mods": { "size": "m" } }
                 ]
@@ -307,13 +332,41 @@ describe('VALID input of WARNING block', () => {
             expect(result).to.be.an('array').that.is.empty;
         }) /* it */
 
-        it('Placeholder and button on the different levels', () => {  
+        it('Button is on the deeper level', () => {  
             const inputJson = `{
                 "block": "warning",
                 "content": [
+                    { "block": "text", "mods": { "size": "s" } },
                     { 
                         "block": "placeholder", 
                         "mods": { "size": "m" } 
+                    },
+                    { 
+                        "block": "some-deeper-block",
+                        "content": {
+                            "block": "button", 
+                            "mods": { "size": "m" }
+                        }
+                    }
+                ]
+            }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.empty;
+        }) /* it */
+
+        it('Placeholder is on the deeper level', () => {  
+            const inputJson = `{
+                "block": "warning",
+                "content": [
+                    { "block": "text", "mods": { "size": "s" } },
+                    { 
+                        "block": "some-deeper-block",
+                        "content": [
+                            { 
+                                "block": "placeholder", 
+                                "mods": { "size": "m" } 
+                            }
+                        ]
                     },
                     { 
                         "block": "some-deeper-block",

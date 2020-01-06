@@ -363,6 +363,31 @@ describe('INVALID input of warning block', () => {
             ]);
         }) /* it */
 
+        it('Invalid button size xxxl', () => {  
+            const inputJson = `{
+                "block": "warning",
+                "content": 
+                    {
+                        "block": "warning",
+                        "content": [
+                            { "block": "text", "mods": { "size": "xxl" } },
+                            { "block": "button", "mods": { "size": "xxxl" } }
+                        ]
+                    }
+            }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.deep.equal([
+                {
+                    "code": "WARNING.INVALID_BUTTON_SIZE",
+                    "error": "Размер кнопки блока warning должен быть на 1 шаг больше эталонного",
+                    "location": {
+                        "start": { "column": 29, "line": 8 },
+                        "end": { "column": 78, "line": 8 }
+                    }
+                }
+            ]);
+        }) /* it */
+
         it('Invalid button sizes, text and non-text blocks in array', () => {  
             const inputJson = `{
                 "block": "warning",
@@ -458,6 +483,7 @@ describe('INVALID input of warning block', () => {
             const inputJson = `{
                 "block": "warning",
                 "content": [
+                    { "block": "text", "mods": { "size": "s" } },
                     { "block": "button", "mods": { "size": "m" } },
                     { "block": "placeholder", "mods": { "size": "m" } }
                 ]
@@ -468,8 +494,8 @@ describe('INVALID input of warning block', () => {
                     "code": "WARNING.INVALID_BUTTON_POSITION",
                     "error": "Блок button в блоке warning не может находиться перед блоком placeholder на том же или более глубоком уровне вложенности",
                     "location": {
-                        "start": { "column": 21, "line": 4 },
-                        "end": { "column": 67, "line": 4 }
+                        "start": { "column": 21, "line": 5 },
+                        "end": { "column": 67, "line": 5 }
                     }
                 }
             ]);
@@ -479,6 +505,7 @@ describe('INVALID input of warning block', () => {
             const inputJson = `{
                 "block": "warning",
                 "content": [
+                    { "block": "text", "mods": { "size": "s" } },
                     { 
                         "block": "some-deeper-block",
                         "content": {
@@ -498,8 +525,8 @@ describe('INVALID input of warning block', () => {
                     "code": "WARNING.INVALID_BUTTON_POSITION",
                     "error": "Блок button в блоке warning не может находиться перед блоком placeholder на том же или более глубоком уровне вложенности",
                     "location": {
-                        "start": { "column": 36, "line": 6 },
-                        "end": { "column": 26, "line": 9 }
+                        "start": { "column": 36, "line": 7 },
+                        "end": { "column": 26, "line": 10 }
                     }
                 }
             ]);
@@ -509,6 +536,7 @@ describe('INVALID input of warning block', () => {
             const inputJson = `{
                 "block": "warning",
                 "content": [
+                    { "block": "text", "mods": { "size": "s" } },
                     { 
                         "block": "some-deeper-block",
                         "content": [
@@ -531,16 +559,65 @@ describe('INVALID input of warning block', () => {
                     "code": "WARNING.INVALID_BUTTON_POSITION",
                     "error": "Блок button в блоке warning не может находиться перед блоком placeholder на том же или более глубоком уровне вложенности",
                     "location": {
-                        "start": { "column": 29, "line": 7 },
-                        "end": { "column": 75, "line": 7 }
+                        "start": { "column": 29, "line": 8 },
+                        "end": { "column": 75, "line": 8 }
                     }
                 },
                 {
                     "code": "WARNING.INVALID_BUTTON_POSITION",
                     "error": "Блок button в блоке warning не может находиться перед блоком placeholder на том же или более глубоком уровне вложенности",
                     "location": {
+                        "start": { "column": 29, "line": 9 },
+                        "end": { "column": 75, "line": 9 }
+                    }
+                }
+            ]);
+        }) /* it */ 
+
+        it('2 buttons before 2 placeholders', () => {  
+            const inputJson = `{
+                "block": "warning",
+                "content": [
+                    { "block": "text", "mods": { "size": "s" } },
+                    { 
+                        "block": "some-deeper-block",
+                        "content": [
+                            { "block": "button", "mods": { "size": "m" } }
+                        ]
+                    },
+                    { 
+                        "block": "some-deeper-block",
+                        "content": {
+                            "block": "placeholder", 
+                            "mods": { "size": "m" }
+                        }
+                    },
+                    { "block": "button", "mods": { "size": "m" } },
+                    { 
+                        "block": "some-deeper-block",
+                        "content": {
+                            "block": "placeholder", 
+                            "mods": { "size": "m" }
+                        }
+                    }
+                ]
+            }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.deep.equal([
+                {
+                    "code": "WARNING.INVALID_BUTTON_POSITION",
+                    "error": "Блок button в блоке warning не может находиться перед блоком placeholder на том же или более глубоком уровне вложенности",
+                    "location": {
                         "start": { "column": 29, "line": 8 },
                         "end": { "column": 75, "line": 8 }
+                    }
+                },
+                {
+                    "code": "WARNING.INVALID_BUTTON_POSITION",
+                    "error": "Блок button в блоке warning не может находиться перед блоком placeholder на том же или более глубоком уровне вложенности",
+                    "location": {
+                        "start": { "column": 21, "line": 18 },
+                        "end": { "column": 67, "line": 18 }
                     }
                 }
             ]);
