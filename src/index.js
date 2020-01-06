@@ -3,7 +3,7 @@ const parse = require('json-to-ast');
 const utils = require('./utils.js');
 const blocks = require('./blocks.js');
 const checkTextSize = require('./warning/checkTextSize.js');
-const checkButtonSize = require('./warning/checkButtonSize.js');
+const checkButtonsSizes = require('./warning/checkButtonsSizes.js');
 const checkButtonPosition = require('./warning/checkButtonPosition.js');
 const checkPlaceholderSize = require('./warning/checkPlaceholderSize.js');
 const checkTextH1 = require('./text/checkTextH1.js');
@@ -53,12 +53,13 @@ function updateParents(nodeLocation, blockType, parents) {
 	return previousParent;
 }
 
-function addPreceding(nodeLocation, blockName, parent) {
+function addPreceding(node, blockName, parent) {
 	let newPreceding = {
 		'block': blockName,
 		'loc': { 'start': {'line': 0, 'column': 0}, 'end': {'line': 0, 'column': 0}}
 	};
-	copyLocation(nodeLocation, newPreceding.loc);
+	copyLocation(node.loc, newPreceding.loc);
+	newPreceding['size'] = utils.extractModsSize(node);
 	parent['preceding'].push(newPreceding);
 }
 
@@ -94,14 +95,13 @@ function processNode(node, parents, errorsList) {
 	let currentParents = updateParents(node.loc, blockType, parents);
 	
 	if (parents['warning'] && blockType === blocks.BLOCK_TYPE_BUTTON) {
-		addPreceding(node.loc, 'button', parents.warning);
+		addPreceding(node, 'button', parents.warning);
 	}
 	if (parents['warning'] && !parents.warning['etalonTextSize'] && blockType === blocks.BLOCK_TYPE_TEXT) {
 		addEtalonTextSize(node, parents.warning);
 	}
 
 	checkTextSize(node, parents, errorsList);
-	checkButtonSize(node, parents, errorsList);
 	checkButtonPosition(node, parents, errorsList);
 	checkPlaceholderSize(node, parents, errorsList);
 	checkTextH1(node, parents, errorsList);
@@ -112,6 +112,11 @@ function processNode(node, parents, errorsList) {
 	if (contentField) {
 		processContent(contentField, parents, errorsList);
 	}
+
+	/* Перед выходом из функции проверяем размеры button'ов на соответствие эталону */
+	checkButtonsSizes(node, parents, errorsList);
+
+	/* Возвращаем предыдущее значение перед выходом их функци */
 	if (currentParents !==  null) {
 		parents[blockType] = currentParents;
 	}
