@@ -38,6 +38,10 @@ function isButtonBlock(node) {
 	return isSomeBlock(node.children, 'button');
 }
 
+function isWarningBlock(node) {
+	return isSomeBlock(node.children, 'warning');
+}
+
 function isPlaceholderBlock(node) {
 	return isSomeBlock(node.children, 'placeholder');
 }
@@ -83,6 +87,7 @@ module.exports = {
 	isSomeBlock,
 	isTextBlock,
 	isButtonBlock,
+	isWarningBlock,
 	isPlaceholderBlock,
 	extractModsSize,
 	getTextBlockSize,
