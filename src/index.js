@@ -11,10 +11,13 @@ const checkTextH2 = require('./text/checkTextH2.js');
 const checkTextH3 = require('./text/checkTextH3.js');
 
 
-const inputJson = `{[
-    { "block": "text", "mods": { "type": "h1" } },
-    { "block": "text", "mods": { "type": "h1" } }
-]}`;
+const inputJson = `{
+	"block": "page",
+	"content": [
+	    { "block": "text", "mods": { "type": "h1" } },
+		{ "block": "text", "mods": { "type": "h1" } }
+	]
+}`;
 
 function getParentsCopy(parents) {
 	return JSON.parse(JSON.stringify(parents));
@@ -103,7 +106,7 @@ function processNode(node, parents, errorsList) {
 	checkTextSize(node, parents, errorsList);
 	checkButtonPosition(node, parents, errorsList);
 	checkPlaceholderSize(node, parents, errorsList);
-	if (blockType !== blocks.BLOCK_TYPE_TEXT) {
+	if (blockType === blocks.BLOCK_TYPE_TEXT) {
 		const textType = utils.extractModsType(node);
 		checkTextH1(node, textType, parents, errorsList);
 		checkTextH2(node, parents, errorsList);
