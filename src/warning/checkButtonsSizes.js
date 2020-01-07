@@ -20,7 +20,7 @@ function checkButtonSize(precedingNode, parents, errorsList) {
     if (!buttonSize || !etalonSize
             || buttonSize !== steps[etalonSize]) {
                 /* Пополняем errorsList */
-                errorsList.push(errors.getError(errors.INVALID_BUTTON_SIZE, precedingNode.loc));
+                errorsList.push(errors.getError(errors.ER_WARN_BTN_SIZE, precedingNode.loc));
     }
 }
 

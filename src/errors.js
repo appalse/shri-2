@@ -1,63 +1,90 @@
 'use strict'
 
-const WARNING_EQUAL_TEXT_SIZE = 'WARNING.TEXT_SIZES_SHOULD_BE_EQUAL';
-const INVALID_BUTTON_SIZE = 'WARNING.INVALID_BUTTON_SIZE';
-const INVALID_BUTTON_POSITION = 'WARNING.INVALID_BUTTON_POSITION';
-const INVALID_PLACEHOLDER_SIZE = 'WARNING.INVALID_PLACEHOLDER_SIZE';
-const SEVERAL_H1 = 'TEXT.SEVERAL_H1';
-const INVALID_H2_POSITION = 'TEXT.INVALID_H2_POSITION';
-const INVALID_H3_POSITION = 'TEXT.INVALID_H3_POSITION';
-const TOO_MUCH_MARKETING_BLOCKS = 'GRID.TOO_MUCH_MARKETING_BLOCKS';
+/* Для быстрого доступа к информации об ошибке используется мапа  */
+const ER_WARN_TXT_NOT_EQ = 'ER_WARN_TXT_NOT_EQ';
+const ER_WARN_BTN_SIZE = 'ER_WARN_BTN_SIZE';
+const ER_WARN_BTN_POS = 'ER_WARN_BTN_POS';
+const ER_WARN_PLACEHOLDER_SIZE = 'ER_WARN_PLACEHOLDER_SIZE';
+const ER_TXT_H1 = 'ER_TXT_H1';
+const ER_TXT_H2 = 'ER_TXT_H2';
+const ER_TXT_H3 = 'ER_TXT_H3';
+const ER_GRID_MUCH_MARKETING = 'ER_GRID_MUCH_MARKETING';
 
-function getError(errorType, loc) {	
-	if (errorType === WARNING_EQUAL_TEXT_SIZE) {
-		return {
-			"code": WARNING_EQUAL_TEXT_SIZE,
-			"error": "Тексты в блоке warning должны быть одного размера и должны быть заданы",
-			"location": {
-				"start": { "column": loc.start.column, "line": loc.start.line },
-				"end": { "column": loc.end.column, "line": loc.end.line }
-			}
-		}
-    } else if (errorType === INVALID_BUTTON_SIZE) {
-		return {
-			"code": INVALID_BUTTON_SIZE,
-			"error": "Размер кнопки блока warning должен быть на 1 шаг больше эталонного",
-			"location": {
-				"start": { "column": loc.start.column, "line": loc.start.line },
-				"end": { "column": loc.end.column, "line": loc.end.line }
-			}
-		}
-	} else if (errorType === INVALID_BUTTON_POSITION) {
-		return {
-			"code": INVALID_BUTTON_POSITION,
-			"error": "Блок button в блоке warning не может находиться перед блоком placeholder на том же или более глубоком уровне вложенности",
-			"location": {
-				"start": { "column": loc.start.column, "line": loc.start.line },
-				"end": { "column": loc.end.column, "line": loc.end.line }
-			}
-		}
-    } else if (errorType === INVALID_PLACEHOLDER_SIZE) {
-		return {
-			"code": INVALID_PLACEHOLDER_SIZE,
-			"error": "Некорретный размер блока placeholder в блоке warning, допустимые значения: s, m, l",
-			"location": {
-				"start": { "column": loc.start.column, "line": loc.start.line },
-				"end": { "column": loc.end.column, "line": loc.end.line }
-			}
-		}
-	}
-	throw 'This error type: ' + errorType + ' was not processed in getError function';
+const CODES = {
+    ER_WARN_TXT_NOT_EQ: {
+        "id": ER_WARN_TXT_NOT_EQ,
+        "type": "WARNING",
+        "code": "TEXT_SIZES_SHOULD_BE_EQUAL",
+        "text": "Тексты в блоке warning должны быть одного размера и должны быть заданы"
+    },
+    ER_WARN_BTN_SIZE: {
+        "id": ER_WARN_BTN_SIZE,
+        "type": "WARNING",
+        "code": "INVALID_BUTTON_SIZE",
+        "text": "Размер кнопки блока warning должен быть на 1 шаг больше эталонного"
+    },
+    ER_WARN_BTN_POS: {
+        "id": ER_WARN_BTN_POS,
+        "type": "WARNING",
+        "code": "INVALID_BUTTON_POSITION",
+        "text": "Блок button в блоке warning не может находиться перед блоком placeholder на том же или более глубоком уровне вложенности"
+    },
+    ER_WARN_PLACEHOLDER_SIZE: {
+        "id": ER_WARN_PLACEHOLDER_SIZE,
+        "type": "WARNING",
+        "code": "INVALID_PLACEHOLDER_SIZE",
+        "text": "Некорретный размер блока placeholder в блоке warning, допустимые значения: s, m, l"
+    },
+    ER_TXT_H1: {
+        "id": ER_TXT_H1,
+        "type": "TEXT",
+        "code": "SEVERAL_H1",
+        "text": "Заголовок первого уровня должен быть единственным на странице"
+    },
+    ER_TXT_H2: {
+        "id": ER_TXT_H2,
+        "type": "TEXT",
+        "code": "INVALID_H2_POSITION",
+        "text": "Заголовок второго уровня не может находиться перед заголовком первого уровня на том же или более глубоком уровне вложенности"
+    },
+    ER_TXT_H3: {
+        "id": ER_TXT_H3,
+        "type": "TEXT",
+        "code": "INVALID_H3_POSITION",
+        "text": "Заголовок третьего уровня не может находиться перед заголовком второго уровня на том же или более глубоком уровне вложенности"
+    },
+    ER_GRID_MUCH_MARKETING: {
+        "id": ER_GRID_MUCH_MARKETING,
+        "type": "GRID",
+        "code": "TOO_MUCH_MARKETING_BLOCKS",
+        "text": "Маркетинговые блоки занимают больше половины или ровно половину от всех колонок блока grid"
+    }
+};
+
+function getError(errorCode, loc) {
+    const e = CODES[errorCode];
+    if (!e) {
+        throw 'This error code: ' + errorCode + ' was not processed in getError function';
+    }
+    const fullErrorCode = e.type + '.' + e.code;	
+    return {
+        "code": fullErrorCode,
+        "error": e.text,
+        "location": {
+            "start": { "column": loc.start.column, "line": loc.start.line },
+            "end": { "column": loc.end.column, "line": loc.end.line }
+        }
+    }
 }
 
 module.exports = {
-    WARNING_EQUAL_TEXT_SIZE,
-    INVALID_BUTTON_SIZE,
-    INVALID_BUTTON_POSITION,
-    INVALID_PLACEHOLDER_SIZE,
-    SEVERAL_H1,
-    INVALID_H2_POSITION,
-    INVALID_H3_POSITION,
-    TOO_MUCH_MARKETING_BLOCKS,
+    ER_WARN_TXT_NOT_EQ,
+    ER_WARN_BTN_SIZE,
+    ER_WARN_BTN_POS,
+    ER_WARN_PLACEHOLDER_SIZE,
+    ER_TXT_H1,
+    ER_TXT_H2,
+    ER_TXT_H3,
+    ER_GRID_MUCH_MARKETING,
     getError
 }

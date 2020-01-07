@@ -13,7 +13,7 @@ function checkButtonPosition(node, parents, errorsList) {
             parents.warning['preceding'].forEach((precedingNode) => {
                 if (precedingNode.block === 'button') {
                     errorsList.pushIfNotExist(
-                        errors.getError(errors.INVALID_BUTTON_POSITION, precedingNode.loc), 
+                        errors.getError(errors.ER_WARN_BTN_POS, precedingNode.loc), 
                         utils.errorComparer);
                 }
             });

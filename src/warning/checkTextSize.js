@@ -15,7 +15,7 @@ function checkTextSize(node, parents, errorsList) {
             if (!modsSize 
                 || modsSize !== parents.warning['etalonTextSize']) {
                     /* Должно быть равно эталонному и быть задано */
-                    const newError = errors.getError(errors.WARNING_EQUAL_TEXT_SIZE, parents['warning'].loc);
+                    const newError = errors.getError(errors.ER_WARN_TXT_NOT_EQ, parents['warning'].loc);
                     errorsList.pushIfNotExist(newError, utils.errorComparer);
             }                 
     }
