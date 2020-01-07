@@ -46,14 +46,22 @@ function isPlaceholderBlock(node) {
 	return isSomeBlock(node.children, 'placeholder');
 }
 
-function extractModsSize(node) {
+function extractModsField(node, fieldName) {
 	let modsIndex = node.children.findIndex(field => field.key.value === 'mods');
 	if (modsIndex === -1) return undefined;
-	let size = node.children[modsIndex].value.children.find(modsField => 
-														modsField.key.value === 'size');
-    if (size) {
-		return size.value.value;
-	}	
+	let fieldValue = node.children[modsIndex].value.children.find(modsField => 
+														modsField.key.value === fieldName);
+    if (fieldValue) {
+		return fieldValue.value.value;
+	}
+}
+
+function extractModsType(node) {
+	return extractModsField(node, 'type');
+}
+
+function extractModsSize(node) {
+	return extractModsField(node, 'size');
 }
 
 function getTextBlockSize(node) {
@@ -89,6 +97,7 @@ module.exports = {
 	isButtonBlock,
 	isWarningBlock,
 	isPlaceholderBlock,
+	extractModsType,
 	extractModsSize,
 	getTextBlockSize,
 	getButtonSize,
