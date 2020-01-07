@@ -25,7 +25,7 @@ function checkButtonSize(precedingNode, parents, errorsList) {
 }
 
 function checkButtonsSizes(node, parents, errorsList) {
-    if (utils.isWarningBlock(node)) {
+    if (utils.isWarningBlock(node) && parents.warning && parents.warning.preceding) {
 		parents.warning['preceding'].forEach(precedingNode => {
 			if (precedingNode.block === 'button') {
 				checkButtonSize(precedingNode, parents, errorsList);
