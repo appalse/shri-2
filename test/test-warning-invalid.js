@@ -195,7 +195,41 @@ describe('INVALID input of warning block', () => {
             ]);
         }) /* it */
 
-        it('Text blocks without size', () => {
+        it('Text block without mods', () => {
+            const inputJson = `{
+                "block": "warning",
+                "content": [
+                    {
+                        "block": "card",
+                        "content": 
+                        {
+                            "elem": "content",
+                            "content": 
+                                {
+                                    "block": "text",
+                                    "mods": { "size": "m" }
+                                }
+                        }
+                    },
+                    {
+                        "block": "text"                        
+                    }
+                ]
+            }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.deep.equal([
+                {
+                    "code": "WARNING.TEXT_SIZES_SHOULD_BE_EQUAL",
+                    "error": "Тексты в блоке warning должны быть одного размера и должны быть заданы",
+                    "location": {
+                        "start": { "column": 1, "line": 1 },
+                        "end": { "column": 14, "line": 20 }
+                    }
+                }
+            ]);
+        }) /* it */
+
+        it('Etalon text block without mods', () => {
             const inputJson = `{
                 "block": "warning",
                 "content": [
@@ -211,7 +245,8 @@ describe('INVALID input of warning block', () => {
                         }
                     },
                     {
-                        "block": "text"
+                        "block": "text",
+                        "mods": { "size": "m" }
                     }
                 ]
             }`;
@@ -222,7 +257,77 @@ describe('INVALID input of warning block', () => {
                     "error": "Тексты в блоке warning должны быть одного размера и должны быть заданы",
                     "location": {
                         "start": { "column": 1, "line": 1 },
-                        "end": { "column": 14, "line": 19 }
+                        "end": { "column": 14, "line": 20 }
+                    }
+                }
+            ]);
+        }) /* it */
+
+        it('Text block without size in mods', () => {
+            const inputJson = `{
+                "block": "warning",
+                "content": [
+                    {
+                        "block": "card",
+                        "content": 
+                        {
+                            "elem": "content",
+                            "content": 
+                                {
+                                    "block": "text",
+                                    "mods": { "size": "m" }
+                                }
+                        }
+                    },
+                    {
+                        "block": "text",
+                        "mods": { "prop": "m" }    
+                    }
+                ]
+            }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.deep.equal([
+                {
+                    "code": "WARNING.TEXT_SIZES_SHOULD_BE_EQUAL",
+                    "error": "Тексты в блоке warning должны быть одного размера и должны быть заданы",
+                    "location": {
+                        "start": { "column": 1, "line": 1 },
+                        "end": { "column": 14, "line": 21 }
+                    }
+                }
+            ]);
+        }) /* it */
+
+        it('Etalon text block without size in mods', () => {
+            const inputJson = `{
+                "block": "warning",
+                "content": [
+                    {
+                        "block": "card",
+                        "content": 
+                        {
+                            "elem": "content",
+                            "content": 
+                                {
+                                    "block": "text",
+                                    "mods": { "prop": "m" }
+                                }
+                        }
+                    },
+                    {
+                        "block": "text",
+                        "mods": { "size": "m" }
+                    }
+                ]
+            }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.deep.equal([
+                {
+                    "code": "WARNING.TEXT_SIZES_SHOULD_BE_EQUAL",
+                    "error": "Тексты в блоке warning должны быть одного размера и должны быть заданы",
+                    "location": {
+                        "start": { "column": 1, "line": 1 },
+                        "end": { "column": 14, "line": 21 }
                     }
                 }
             ]);
@@ -242,6 +347,38 @@ describe('INVALID input of warning block', () => {
                             {
                                 "block": "text",
                                 "mods": { "size": "" }
+                            }
+                        ]
+                    }
+                ]
+            }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.deep.equal([
+                {
+                    "code": "WARNING.TEXT_SIZES_SHOULD_BE_EQUAL",
+                    "error": "Тексты в блоке warning должны быть одного размера и должны быть заданы",
+                    "location": {
+                        "start": { "column": 1, "line": 1 },
+                        "end": { "column": 14, "line": 18 }
+                    }
+                }
+            ]);
+        }) /* it */
+
+        it('Etalon size is not set', () => {
+            const inputJson = `{
+                "block": "warning",
+                "content": [
+                    {
+                        "elem": "content",
+                        "content": [
+                            {
+                                "block": "text",
+                                "mods": { "size": "" }
+                            },
+                            {
+                                "block": "text",
+                                "mods": { "size": "xl" }
                             }
                         ]
                     }
@@ -412,7 +549,7 @@ describe('INVALID input of warning block', () => {
             ]);
         }) /* it */
 
-        it('Text and button blocks are on different levels', () => {  
+        it('Buttons are on deeper levels than etalon text', () => {  
             const inputJson = `{
                 "block": "warning",
                 "content": [
@@ -420,7 +557,6 @@ describe('INVALID input of warning block', () => {
                     {
                         "block": "deeper-block",
                         "content" : [
-                            { "block": "button", "mods": { "size": "s" } },
                             {
                                 "block": "more-deeper-block",
                                 "content": 
@@ -436,20 +572,48 @@ describe('INVALID input of warning block', () => {
                     "code": "WARNING.INVALID_BUTTON_SIZE",
                     "error": "Размер кнопки блока warning должен быть на 1 шаг больше эталонного",
                     "location": {
-                        "start": { "column": 29, "line": 8 },
-                        "end": { "column": 75, "line": 8 }
-                    }
-                },
-                {
-                    "code": "WARNING.INVALID_BUTTON_SIZE",
-                    "error": "Размер кнопки блока warning должен быть на 1 шаг больше эталонного",
-                    "location": {
-                        "start": { "column": 37, "line": 12 },
-                        "end": { "column": 83, "line": 12 }
+                        "start": { "column": 37, "line": 11 },
+                        "end": { "column": 83, "line": 11 }
                     }
                 }
             ]);
         }) /* it */
+
+        it('Etalon text is on deeper level than buttons', () => {  
+            const inputJson = `{
+                "block": "warning",
+                "content": [
+                    {
+                        "block": "deeper-block",
+                        "content" : [
+                            { "block": "text", "mods": { "size": "m" } }
+                        ]
+                    },
+                    {
+                        "block": "deeper-block",
+                        "content" : [
+                            {
+                                "block": "more-deeper-block",
+                                "content": 
+                                    { "block": "button", "mods": { "size": "m" } }
+                            }
+                        ]
+                    }
+                ]
+            }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.deep.equal([
+                {
+                    "code": "WARNING.INVALID_BUTTON_SIZE",
+                    "error": "Размер кнопки блока warning должен быть на 1 шаг больше эталонного",
+                    "location": {
+                        "start": { "column": 37, "line": 16 },
+                        "end": { "column": 83, "line": 16 }
+                    }
+                }
+            ]);
+        }) /* it */
+
 
         it('Invalid empty button size', () => {  
             const inputJson = `{
@@ -471,6 +635,84 @@ describe('INVALID input of warning block', () => {
                 }
             ]);
         }) /* it */
+
+        it('No size in button mods', () => {  
+            const inputJson = `{
+                "block": "warning",
+                "content": [
+                    { "block": "text", "mods": { "size": "m" } },
+                    { "block": "button", "mods": { "prop": "" } }
+                ]
+            }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.deep.equal([
+                {
+                    "code": "WARNING.INVALID_BUTTON_SIZE",
+                    "error": "Размер кнопки блока warning должен быть на 1 шаг больше эталонного",
+                    "location": {
+                        "start": { "column": 21, "line": 5 },
+                        "end": { "column": 66, "line": 5 }
+                    }
+                }
+            ]);
+        }) /* it */
+
+        it('No mods in button', () => {  
+            const inputJson = `{
+                "block": "warning",
+                "content": [
+                    { "block": "text", "mods": { "size": "m" } },
+                    { "block": "button" }
+                ]
+            }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.deep.equal([
+                {
+                    "code": "WARNING.INVALID_BUTTON_SIZE",
+                    "error": "Размер кнопки блока warning должен быть на 1 шаг больше эталонного",
+                    "location": {
+                        "start": { "column": 21, "line": 5 },
+                        "end": { "column": 42, "line": 5 }
+                    }
+                }
+            ]);
+        }) /* it */
+
+        it('Etalon text is under buttons', () => {  
+            const inputJson = `{
+                "block": "warning",
+                "content": [
+                    {
+                        "block": "deeper-block",
+                        "content" : [
+                            {
+                                "block": "more-deeper-block",
+                                "content": 
+                                    { "block": "button", "mods": { "size": "m" } }
+                            }
+                        ]
+                    },
+                    {
+                        "block": "deeper-block",
+                        "content" : [
+                            { "block": "text", "mods": { "size": "m" } }
+                        ]
+                    }
+                ]
+            }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.deep.equal([
+                {
+                    "code": "WARNING.INVALID_BUTTON_SIZE",
+                    "error": "Размер кнопки блока warning должен быть на 1 шаг больше эталонного",
+                    "location": {
+                        "start": { "column": 37, "line": 10 },
+                        "end": { "column": 83, "line": 10 }
+                    }
+                }
+            ]);
+        }) /* it */
+
 
     }) /* describe: NO - WARNING.INVALID_BUTTON_SIZE */
 
@@ -760,6 +1002,48 @@ describe('INVALID input of warning block', () => {
             ]);
         }) /* it */
 
+        it('No mods in placeholder', () => {  
+            const inputJson = `{
+                "block": "warning",
+                "content": {
+                    "block": "placeholder"
+                }
+            }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.deep.equal([
+                {
+                    "code": "WARNING.INVALID_PLACEHOLDER_SIZE",
+                    "error": "Некорретный размер блока placeholder в блоке warning, допустимые значения: s, m, l",
+                    "location": {
+                        "start": { "column": 28, "line": 3 },
+                        "end": { "column": 18, "line": 5 }
+                    }
+                }
+            ]);
+        }) /* it */
+
+        it('No size property in placeholder mods', () => {  
+            const inputJson = `{
+                "block": "warning",
+                "content": {
+                    "block": "placeholder",
+                    "mods": { "prop": "m", "prop2": "s" }
+                }
+            }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.deep.equal([
+                {
+                    "code": "WARNING.INVALID_PLACEHOLDER_SIZE",
+                    "error": "Некорретный размер блока placeholder в блоке warning, допустимые значения: s, m, l",
+                    "location": {
+                        "start": { "column": 28, "line": 3 },
+                        "end": { "column": 18, "line": 6 }
+                    }
+                }
+            ]);
+        }) /* it */
+
     }) /* describe: WARNING.INVALID_PLACEHOLDER_SIZE */
 
+    
 }) /* INVALID input of warning block */

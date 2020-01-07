@@ -40,7 +40,7 @@ describe('VALID input of WARNING block', () => {
             expect(result).to.be.an('array').that.is.empty;
         }) /* it */
         
-        it('3 text blocks of size-m, 2nd level children,content is object', () => {  
+        it('3 text blocks of size-m, 3rd level children,content is object', () => {  
             const inputJson = `
             { 
                 "block": "warning",
@@ -75,6 +75,63 @@ describe('VALID input of WARNING block', () => {
             expect(result).to.be.an('array').that.is.empty;
         }) /* it */  
 
+        it('3 nested warning blocks of different text sizes', () => {  
+            const inputJson = `
+            { 
+                "block": "warning",
+                "content": [
+                    { 
+                        "block": "text",
+                        "mods": { "size": "l" }
+                    },
+                    { 
+                        "block": "warning", 
+                        "elem": "content",
+                        "content": [
+                            { 
+                                "block": "text",
+                                "mods": { "size": "m" }
+                            },
+                            {
+                                "block": "warning",
+                                "elem": "button-wrapper",
+                                "content":
+                                    [
+                                        { 
+                                            "block": "text",
+                                            "mods": { "size": "l" }
+                                        },
+                                        {  
+                                            "block": "text",
+                                            "mods": { "size": "l" }
+                                        },
+                                        {  
+                                            "block": "text",
+                                            "mods": { "size": "l" }
+                                        }
+                                    ]
+                            },
+                            {  
+                                "block": "text",
+                                "mods": { "size": "m" }
+                            },
+                            {  
+                                "block": "text",
+                                "mods": { "size": "m" }
+                            }
+                        ]
+                    },
+                    { 
+                        "block": "text",
+                        "mods": { "size": "l" }
+                    }
+                ]
+            }`;
+            
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.empty;
+        }) /* it */  
+
         it('no warning block with non-equal text sizes', () => {  
             const inputJson = `
             { 
@@ -90,6 +147,33 @@ describe('VALID input of WARNING block', () => {
                             {  
                                 "block": "text",
                                 "mods": { "size": "l" }
+                            }
+                        ]
+                }
+            }`;
+            
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.empty;
+        }) /* it */  
+
+        it('no warning block with not set text sizes', () => {  
+            const inputJson = `
+            { 
+                "block": "not-a-warning-block",
+                "content": {  
+                    "elem": "content",
+                    "content": 
+                        [
+                            { 
+                                "block": "text",
+                                "mods": { "size": "" }
+                            },
+                            {  
+                                "block": "text",
+                                "mods": { "prop": "l" }
+                            },
+                            {  
+                                "block": "text"
                             }
                         ]
                 }
@@ -312,6 +396,47 @@ describe('VALID input of WARNING block', () => {
             expect(result).to.be.an('array').that.is.empty;
         }) /* it */
 
+        it('Not warning block, button m-size', () => {  
+            const inputJson = `{
+                "block": "not-a-warning-block",
+                "content": [
+                    {
+                        "block": "button", 
+                        "mods": { "size": "m" }
+                    },
+                    { 
+                        "block": "some-deeper-block",
+                        "content": [
+                            { 
+                                "block": "text", 
+                                "mods": { "size": "m" } 
+                            }
+                        ]
+                    }
+                ]
+            }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.empty;
+        }) /* it */
+
+        it('Not warning block, button empty size', () => {  
+            const inputJson = `{
+                "block": "not-a-warning-block",
+                "content": [
+                    {
+                        "block": "button", 
+                        "mods": { "size": "" }
+                    },
+                    { 
+                        "block": "text", 
+                        "mods": { "size": "m" } 
+                    }
+                ]
+            }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.empty;
+        }) /* it */
+
     }) /* describe: NO - WARNING.INVALID_BUTTON_SIZE */
 
 
@@ -337,10 +462,7 @@ describe('VALID input of WARNING block', () => {
                 "block": "warning",
                 "content": [
                     { "block": "text", "mods": { "size": "s" } },
-                    { 
-                        "block": "placeholder", 
-                        "mods": { "size": "m" } 
-                    },
+                    { "block": "placeholder", "mods": { "size": "m" } },
                     { 
                         "block": "some-deeper-block",
                         "content": {
@@ -374,6 +496,33 @@ describe('VALID input of WARNING block', () => {
                             "block": "button", 
                             "mods": { "size": "m" }
                         }
+                    }
+                ]
+            }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.empty;
+        }) /* it */
+
+        it('Not warning block and placeholder under button', () => {  
+            const inputJson = `{
+                "block": "not-a-warning-block",
+                "content": [
+                    { "block": "text", "mods": { "size": "s" } },
+                    { 
+                        "block": "some-deeper-block",
+                        "content": {
+                            "block": "button", 
+                            "mods": { "size": "m" }
+                        }
+                    },
+                    { 
+                        "block": "some-deeper-block",
+                        "content": [
+                            { 
+                                "block": "placeholder", 
+                                "mods": { "size": "m" } 
+                            }
+                        ]
                     }
                 ]
             }`;
@@ -445,12 +594,37 @@ describe('VALID input of WARNING block', () => {
             expect(result).to.be.an('array').that.is.empty;
         }) /* it */
 
-        it('no warning block with non-valid placeholder size', () => {  
+        it('Not warning block with non-valid placeholder size', () => {  
             const inputJson = `{
                 "block": "not-a-warning-block",
                 "content": {
                     "block": "placeholder",
                     "mods": { "size": "xs" }
+                }
+            }`;
+            
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.empty;
+        }) /* it */
+
+        it('Not warning block with empty placeholder size', () => {  
+            const inputJson = `{
+                "block": "not-a-warning-block",
+                "content": {
+                    "block": "placeholder",
+                    "mods": { "size": "" }
+                }
+            }`;
+            
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.empty;
+        }) /* it */
+
+        it('Not warning block with no placeholder mods', () => {  
+            const inputJson = `{
+                "block": "not-a-warning-block",
+                "content": {
+                    "block": "placeholder"
                 }
             }`;
             
@@ -472,8 +646,6 @@ describe('VALID input of WARNING block', () => {
         }) /* it */
 
     }) /* describe: NO - WARNING.INVALID_PLACEHOLDER_SIZE */
-    
- 
 
 
 }); /* describe: VALID input of WARNING block */
