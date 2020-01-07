@@ -10,7 +10,7 @@ function checkPlaceholderSize(node, parents, errorsList) {
         let modsSize = utils.extractModsSize(node);
         /* Должно быть равно s, m, l */
         if (modsSize !== 's' && modsSize !== 'm' && modsSize !== 'l') {
-            errorsList.push(errors.getError(errors.INVALID_PLACEHOLDER_SIZE, parents['placeholder'].loc));
+            errorsList.push(errors.getError(errors.INVALID_PLACEHOLDER_SIZE, node.loc));
         }
     }
 }

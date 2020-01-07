@@ -31,11 +31,7 @@ function copyLocation(source, dest) {
 	dest.end.column = source.end.column;
 }
 
-function updateParents(nodeLocation, blockType, parents) {
-	if (blockType !== blocks.BLOCK_TYPE_WARNING
-		&& blockType !== blocks.BLOCK_TYPE_PLACEHOLDER) {
-			return null;
-		}
+function updateWarningParent(nodeLocation, blockType, parents) {
 	const previousParent = parents[blockType] ? getParentsCopy(parents[blockType]) : undefined;
 	if (parents[blockType]) {
 		parents[blockType]['etalonTextSize'] = undefined;
@@ -51,6 +47,12 @@ function updateParents(nodeLocation, blockType, parents) {
 		parents[blockType]  = newParent;
 	}
 	return previousParent;
+}
+
+function updateParents(nodeLocation, blockType, parents) {
+	if (blockType !== blocks.BLOCK_TYPE_WARNING) {
+		return updateWarningParent(nodeLocation, blockType, parents);
+	}	
 }
 
 function addPreceding(node, blockName, parent) {
@@ -104,9 +106,11 @@ function processNode(node, parents, errorsList) {
 	checkTextSize(node, parents, errorsList);
 	checkButtonPosition(node, parents, errorsList);
 	checkPlaceholderSize(node, parents, errorsList);
-	checkTextH1(node, parents, errorsList);
-	checkTextH2(node, parents, errorsList);
-	checkTextH3(node, parents, errorsList);
+	if (blockType !== blocks.BLOCK_TYPE_TEXT) {
+		checkTextH1(node, parents, errorsList);
+		checkTextH2(node, parents, errorsList);
+		checkTextH3(node, parents, errorsList);
+	}
 
 	const contentField = utils.extractContent(node.children);
 	if (contentField) {
