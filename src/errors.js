@@ -47,7 +47,7 @@ function getError(errorType, loc) {
 			}
 		}
 	}
-	throw 'Uncatched error type: ' + errorType;
+	throw 'This error type: ' + errorType + ' was not processed in getError function';
 }
 
 module.exports = {
