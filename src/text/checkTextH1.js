@@ -1,8 +1,8 @@
 'use strict'
 
-/* Заголовок первого уровня (блок text с модификатором type h1) на странице должен быть единственным. */
+/* Заголовок первого уровня (блок text с модификатором type h1) 
+на странице должен быть единственным. */
 
-const utils = require('./../utils.js');
 const errors = require('./../errors.js');
 
 function checkTextH1(textNode, textType, parents, errorsList) {

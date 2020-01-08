@@ -24,28 +24,6 @@ function errorComparer(newError, error) {
             && error.location.end.line === newError.location.end.line;
 }
 
-function isSomeBlock(nodeChildren, blockName) {
-	return nodeChildren.some(element => 
-								element.key.value === 'block' 
-								&& element.value.value === blockName);
-}
-
-function isTextBlock(node) {
-	return isSomeBlock(node.children, 'text');
-}
-
-function isButtonBlock(node) {
-	return isSomeBlock(node.children, 'button');
-}
-
-function isWarningBlock(node) {
-	return isSomeBlock(node.children, 'warning');
-}
-
-function isPlaceholderBlock(node) {
-	return isSomeBlock(node.children, 'placeholder');
-}
-
 function extractModsField(node, fieldName) {
 	let modsIndex = node.children.findIndex(field => field.key.value === 'mods');
 	if (modsIndex === -1) return undefined;
@@ -88,15 +66,8 @@ function extractContent(nodeFields) {
 	return contentFields[0].value;
 }
 
-
-
 module.exports = {
 	errorComparer,
-	isSomeBlock,
-	isTextBlock,
-	isButtonBlock,
-	isWarningBlock,
-	isPlaceholderBlock,
 	extractModsType,
 	extractModsSize,
 	getTextBlockSize,

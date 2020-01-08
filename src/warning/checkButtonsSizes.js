@@ -3,8 +3,8 @@
 /* Размер кнопки блока warning должен быть на 1 шаг больше эталонного 
 (например, для размера l таким значением будет xl) */
 
-const utils = require('../utils.js');
 const errors = require('../errors.js');
+const blocks = require('./../blocks.js');
 
 const steps = {
     'xs': 's',
@@ -25,7 +25,7 @@ function checkButtonSize(precedingNode, parents, errorsList) {
 }
 
 function checkButtonsSizes(node, parents, errorsList) {
-    if (utils.isWarningBlock(node) && parents.warning && parents.warning.preceding) {
+    if (blocks.isWarningBlock(node) && parents.warning && parents.warning.preceding) {
 		parents.warning['preceding'].forEach(precedingNode => {
 			if (precedingNode.block === 'button') {
 				checkButtonSize(precedingNode, parents, errorsList);

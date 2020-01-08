@@ -4,9 +4,10 @@
 
 const utils = require('./../utils.js');
 const errors = require('./../errors.js');
+const blocks = require('./../blocks.js');
 
 function checkPlaceholderSize(node, parents, errorsList) {
-    if (parents['warning'] && utils.isPlaceholderBlock(node)) {
+    if (parents['warning'] && blocks.isPlaceholderBlock(node)) {
         let modsSize = utils.extractModsSize(node);
         /* Должно быть равно s, m, l */
         if (modsSize !== 's' && modsSize !== 'm' && modsSize !== 'l') {

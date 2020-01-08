@@ -7,10 +7,11 @@
 
 const utils = require('./../utils.js');
 const errors = require('./../errors.js');
+const blocks = require('./../blocks.js');
 
 function checkTextSize(node, parents, errorsList) {
     if (parents['warning'] 
-        && utils.isTextBlock(node)) {
+        && blocks.isTextBlock(node)) {
             let modsSize = utils.extractModsSize(node);
             if (!modsSize 
                 || modsSize !== parents.warning['etalonTextSize']) {

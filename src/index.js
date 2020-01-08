@@ -50,7 +50,7 @@ function updateWarningParent(nodeLocation, blockType, parents) {
 }
 
 function updateParents(nodeLocation, blockType, parents) {
-	if (blockType === blocks.BLOCK_TYPE_WARNING) {
+	if (blockType === 'warning') {
 		return updateWarningParent(nodeLocation, blockType, parents);
 	}	
 }
@@ -93,20 +93,20 @@ function processContent(contentField, parents, errorsList) {
 }
 
 function processNode(node, parents, errorsList) {
-	const blockType = blocks.getBlockType(node);
-	let currentParents = updateParents(node.loc, blockType, parents);
+	const blockName = blocks.getBlockName(node);
+	let currentParents = updateParents(node.loc, blockName, parents);
 	
-	if (parents['warning'] && blockType === blocks.BLOCK_TYPE_BUTTON) {
+	if (parents['warning'] && blockName === 'button') {
 		addPreceding(node, 'button', parents.warning);
 	}
-	if (parents['warning'] && !parents.warning['etalonTextSize'] && blockType === blocks.BLOCK_TYPE_TEXT) {
+	if (parents['warning'] && !parents.warning['etalonTextSize'] && blockName === 'text') {
 		addEtalonTextSize(node, parents.warning);
 	}
 
 	checkTextSize(node, parents, errorsList);
 	checkButtonPosition(node, parents, errorsList);
 	checkPlaceholderSize(node, parents, errorsList);
-	if (blockType === blocks.BLOCK_TYPE_TEXT) {
+	if (blockName === 'text') {
 		const textType = utils.extractModsType(node);
 		checkTextH1(node, textType, parents, errorsList);
 		checkTextH2(node, parents, errorsList);
@@ -123,7 +123,7 @@ function processNode(node, parents, errorsList) {
 
 	/* Возвращаем предыдущее значение перед выходом их функци */
 	if (currentParents !==  null) {
-		parents[blockType] = currentParents;
+		parents[blockName] = currentParents;
 	}
 }			
 
