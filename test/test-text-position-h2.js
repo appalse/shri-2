@@ -48,8 +48,34 @@ describe('TEXT.INVALID_H2_POSITION', () => {
                     "code": "TEXT.INVALID_H2_POSITION",
                     "error": "Заголовок второго уровня не может находиться перед заголовком первого уровня на том же или более глубоком уровне вложенности",
                     "location": {
+                        "start": { "column": 33, "line": 9 },
+                        "end": { "column": 78, "line": 9 }
+                    }
+                }
+            ]);
+        }) /* it */
+
+        it('h2 before internal nested h1', () => {
+            const inputJson = `{
+                "block": "page",
+                "content": [
+                    {
+                        "block": "text",
+                        "mods": { "type": "h2" },
+                        "content": [
+                            { "block": "text", "mods": { "type": "h1" } }
+                        ]
+                    }            
+                ]
+            }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.deep.equal([
+                {
+                    "code": "TEXT.INVALID_H2_POSITION",
+                    "error": "Заголовок второго уровня не может находиться перед заголовком первого уровня на том же или более глубоком уровне вложенности",
+                    "location": {
                         "start": { "column": 21, "line": 4 },
-                        "end": { "column": 66, "line": 4 }
+                        "end": { "column": 22, "line": 10 }
                     }
                 }
             ]);
