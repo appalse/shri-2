@@ -5,7 +5,31 @@ var expect = chai.expect;
 describe('TEXT.SEVERAL_H1', () => {
 
     describe('INVALID', () => {
-       
+        
+        it('Input array as in example', () => {
+            const inputJson = `[
+                {
+                    "block": "text",
+                    "mods": { "type": "h1" }
+                },
+                {
+                    "block": "text",
+                    "mods": { "type": "h1" }
+                }
+            ]`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.deep.equal([
+                {
+                    "code": "TEXT.SEVERAL_H1",
+                    "error": "Заголовок первого уровня должен быть единственным на странице",
+                    "location": {
+                        "start": { "column": 17, "line": 6 },
+                        "end": { "column": 18, "line": 9 }
+                    }
+                }
+            ]);
+        }) /* it */
+        
         it('2 sequential h1', () => {
             const inputJson = `{
                 "block": "page",
@@ -122,6 +146,17 @@ describe('TEXT.SEVERAL_H1', () => {
     }) /* describe: INVALID */
     
     describe('VALID', () => {
+
+        it('Input array as in example', () => {
+            const inputJson = `[
+                {
+                    "block": "text",
+                    "mods": { "type": "h1" }
+                }
+            ]`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.empty;
+        }) /* it */
        
         it('no sequential h1', () => {
             const inputJson = `{

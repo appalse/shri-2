@@ -5,6 +5,30 @@ var expect = chai.expect;
 describe('TEXT.INVALID_H2_POSITION', () => {
 
     describe('INVALID', () => {
+
+        it('Input array as in example', () => {
+            const inputJson = `[
+                {
+                    "block": "text",
+                    "mods": { "type": "h2" }
+                },
+                {
+                    "block": "text",
+                    "mods": { "type": "h1" }
+                }
+            ]`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.deep.equal([
+                {
+                    "code": "TEXT.INVALID_H2_POSITION",
+                    "error": "Заголовок второго уровня не может находиться перед заголовком первого уровня на том же или более глубоком уровне вложенности",
+                    "location": {
+                        "start": { "column": 17, "line": 2 },
+                        "end": { "column": 18, "line": 5 }
+                    }
+                }
+            ]);
+        }) /* it */
        
         it('h2 before h1', () => {
             const inputJson = `{
@@ -84,6 +108,21 @@ describe('TEXT.INVALID_H2_POSITION', () => {
     }) /* describe: INVALID */
     
     describe('VALID', () => {
+
+        it('Input array as in example', () => {
+            const inputJson = `[
+                {
+                    "block": "text",
+                    "mods": { "type": "h1" }
+                },
+                {
+                    "block": "text",
+                    "mods": { "type": "h2" }
+                }
+            ]`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.empty;
+        }) /* it */
        
         it('h1 before h2', () => {
             const inputJson = `{
