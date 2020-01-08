@@ -100,7 +100,7 @@ function processNode(node, parents, errorsList) {
 	const blockName = blocks.getBlockName(node);
 	let currentParents = updateParents(node.loc, blockName, parents);
 	
-	if (parents['warning']) {
+	/*if (parents['warning']) {
         if (blockName === 'button') {
             addPreceding(node, 'button', parents.warning);
         }
@@ -109,10 +109,10 @@ function processNode(node, parents, errorsList) {
         }
 
         /* Проверяем текущий узел */
-        checkTextSize(node, parents, errorsList);
+    /*    checkTextSize(node, parents, errorsList);
     	checkButtonPosition(node, parents, errorsList);
 	    checkPlaceholderSize(node, parents, errorsList);
-    }
+    }*/
     if (blockName === 'text') {
         const textType = utils.extractModsType(node);
         if (textType === 'h2') {
