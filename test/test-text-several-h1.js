@@ -94,6 +94,31 @@ describe('TEXT.SEVERAL_H1', () => {
             ]);
         }) /* it */
 
+        it('Internal nested h1', () => {
+            const inputJson = `{
+                "block": "text",
+                "content": [
+                    {
+                        "block": "text",
+                        "mods": { "type": "h1" },
+                        "content": 
+                            { "block": "text", "mods": { "type": "h1" } }
+                    }
+                ]
+            }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.deep.equal([
+                {
+                    "code": "TEXT.SEVERAL_H1",
+                    "error": "Заголовок первого уровня должен быть единственным на странице",
+                    "location": {
+                        "start": { "column": 29, "line": 8 },
+                        "end": { "column": 74, "line": 8 }
+                    }
+                }
+            ]);
+        }) /* it */
+
     }) /* describe: INVALID */
     
     describe('VALID', () => {

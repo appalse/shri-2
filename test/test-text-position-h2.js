@@ -97,6 +97,63 @@ describe('TEXT.INVALID_H2_POSITION', () => {
             expect(result).to.be.an('array').that.is.empty;
         }) /* it */
 
+        it('h1 before nested internal h2', () => {
+            const inputJson = `{
+                "block": "page",
+                "content": [
+                    { 
+                        "block": "text", 
+                        "mods": { "type": "h1" },
+                        "content": [
+                            { "block": "text", "mods": { "type": "h2" } },
+                            { "block": "text", "mods": { "type": "h2" } }
+                        ]
+                    }
+                ]
+            }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.empty;
+        }) /* it */
+
+        it('h1 before nested h2', () => {
+            const inputJson = `{
+                "block": "page",
+                "content": [
+                    { 
+                        "block": "text", 
+                        "mods": { "type": "h1" }
+                    },
+                    { 
+                        "block": "card", 
+                        "content": [
+                            { "block": "text", "mods": { "type": "h2" } },
+                            { "block": "text", "mods": { "type": "h2" } }
+                        ]
+                    }
+                ]
+            }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.empty;
+        }) /* it */
+
+        it('h1 before nested internal h2', () => {
+            const inputJson = `{
+                "block": "page",
+                "content": [
+                    { 
+                        "block": "text", 
+                        "mods": { "type": "h1" },
+                        "content": [
+                            { "block": "text", "mods": { "type": "h2" } },
+                            { "block": "text", "mods": { "type": "h2" } }
+                        ]
+                    }
+                ]
+            }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.empty;
+        }) /* it */
+
     }) /* describe: VALID */
         
 }) /* describe: TEXT.INVALID_H2_POSITION */
