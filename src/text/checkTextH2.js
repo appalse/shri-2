@@ -7,7 +7,12 @@
 const utils = require('./../utils.js');
 const errors = require('./../errors.js');
 
-function checkTextH2(node, parents, errorsList) {
+function checkTextH2(textNode, textType, parents, errorsList) {
+    if (textType === 'h1' && parents.headingH2List && parents.headingH2List.length > 0) {
+        parents.headingH2List.forEach(headingH2 => {
+            errorsList.pushIfNotExist(errors.getError(errors.ER_TXT_H2, headingH2.loc), utils.errorComparer);
+        });
+    }
 }
 
 module.exports = checkTextH2;

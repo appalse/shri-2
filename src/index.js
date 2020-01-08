@@ -67,6 +67,18 @@ function addEtalonTextSize(node, parent) {
 	} 
 }
 
+function addHeadingInList(nodeLocation, headingListName, parents) {
+    if (!parents[headingListName]) {
+        parents[headingListName] = [];
+    }
+    parents[headingListName].push({
+        'loc': { 
+            'start': { 'line': nodeLocation.start.line, 'column': nodeLocation.start.column }, 
+            'end': { 'line': nodeLocation.end.line, 'column': nodeLocation.end.column }
+        }
+    });
+}
+
 function processArrayOfNodes(contentArray, parents, errorsList) {
 	/* Вызываем обработку дальше в грубину */
 	contentArray.forEach(node => {
@@ -88,24 +100,29 @@ function processNode(node, parents, errorsList) {
 	const blockName = blocks.getBlockName(node);
 	let currentParents = updateParents(node.loc, blockName, parents);
 	
-	if (parents['warning'] && blockName === 'button') {
-		addPreceding(node, 'button', parents.warning);
-	}
-	if (parents['warning'] && !parents.warning['etalonTextSize'] && blockName === 'text') {
-		addEtalonTextSize(node, parents.warning);
-    }
-    
-    /* Проверяем текущий узел */
-    if (parents['warning']) {
+	if (parents['warning']) {
+        if (blockName === 'button') {
+            addPreceding(node, 'button', parents.warning);
+        }
+	    if (!parents.warning['etalonTextSize'] && blockName === 'text') {
+		    addEtalonTextSize(node, parents.warning);
+        }
+
+        /* Проверяем текущий узел */
         checkTextSize(node, parents, errorsList);
     	checkButtonPosition(node, parents, errorsList);
 	    checkPlaceholderSize(node, parents, errorsList);
     }
-	if (blockName === 'text') {
-		const textType = utils.extractModsType(node);
+    if (blockName === 'text') {
+        const textType = utils.extractModsType(node);
+        if (textType === 'h2') {
+            addHeadingInList(node.loc, 'headingH2List', parents);
+        } else if (textType === 'h3') {
+            addHeadingInList(node.loc, 'headingH3List', parents);
+        }
 		checkTextH1(node, textType, parents, errorsList);
-		checkTextH2(node, parents, errorsList);
-		checkTextH3(node, parents, errorsList);
+		checkTextH2(node, textType, parents, errorsList);
+		checkTextH3(node, textType, parents, errorsList);
     }
     
     /* Идем в глубину */

@@ -6,8 +6,8 @@
 const errors = require('./../errors.js');
 
 function checkTextH1(textNode, textType, parents, errorsList) {
-    if (textType && textType === 'h1') {
-        if (parents['headingH1']) {
+    if (textType === 'h1') {
+        if (parents.headingH1) {
             errorsList.push(errors.getError(errors.ER_TXT_H1, textNode.loc));
         } else {
             parents['headingH1'] = textType;
