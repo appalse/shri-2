@@ -6,7 +6,6 @@ var should = chai.should();
 
 describe('VALID input of WARNING block', () => {
 
-
     describe('NO - WARNING.TEXT_SIZES_SHOULD_BE_EQUAL', () => {
 
         it('2 text blocks of size-l', () => {  
@@ -86,7 +85,6 @@ describe('VALID input of WARNING block', () => {
                     },
                     { 
                         "block": "warning", 
-                        "elem": "content",
                         "content": [
                             { 
                                 "block": "text",
@@ -94,7 +92,6 @@ describe('VALID input of WARNING block', () => {
                             },
                             {
                                 "block": "warning",
-                                "elem": "button-wrapper",
                                 "content":
                                     [
                                         { 
@@ -183,47 +180,26 @@ describe('VALID input of WARNING block', () => {
             expect(result).to.be.an('array').that.is.empty;
         }) /* it */  
         
-        it('Nested warning blocks with different text sizes', () => {  
-            const inputJson = `
-            { 
+        it('Separate nested warning blocks with different text sizes', () => {  
+            const inputJson = `{ 
                 "block": "warning",
-                "content": 
-                    [
-                        { 
-                            "block": "text",
-                            "mods": { "size": "s" }
-                        },
-                        { 
-                            "block": "warning", 
-                            "elem": "content",
-                            "content": 
-                                [
-                                    {
-                                        "block": "warning",
-                                        "elem": "button-wrapper",
-                                        "content":
-                                            [
-                                                { 
-                                                    "block": "text",
-                                                    "mods": { "size": "m" }
-                                                },
-                                                {  
-                                                    "block": "text",
-                                                    "mods": { "size": "m" }
-                                                },
-                                                {  
-                                                    "block": "text",
-                                                    "mods": { "size": "m" }
-                                                }
-                                            ]
-                                    },
-                                    { 
-                                        "block": "text",
-                                        "mods": { "size": "l" }
-                                    }
+                "content": [
+                    {"block": "text", "mods": { "size": "s" } },
+                    { 
+                        "block": "warning", 
+                        "content": [
+                            {
+                                "block": "warning",
+                                "content": [
+                                    { "block": "text", "mods": { "size": "m" } },
+                                    { "block": "text", "mods": { "size": "m" } },
+                                    { "block": "text", "mods": { "size": "m" } }
                                 ]
-                        }
-                    ]
+                            },
+                            { "block": "text", "mods": { "size": "l" } }
+                        ]
+                    }
+                ]
             }`;
             
             const result = lint(inputJson);
@@ -646,6 +622,5 @@ describe('VALID input of WARNING block', () => {
         }) /* it */
 
     }) /* describe: NO - WARNING.INVALID_PLACEHOLDER_SIZE */
-
 
 }); /* describe: VALID input of WARNING block */

@@ -7,7 +7,6 @@ var should = chai.should();
 
 describe('INVALID input of warning block', () => {
 
-
     describe('WARNING.TEXT_SIZES_SHOULD_BE_EQUAL', () => {
        
         it('2 blocks of different sizes', () => {
@@ -396,6 +395,42 @@ describe('INVALID input of warning block', () => {
                 }
             ]);
         }) /* it */
+
+        it('Nested warning elements of different text sizes inside one warning block', () => {  
+            const inputJson = `{ 
+                "block": "warning",
+                "content": [
+                    { 
+                        "block": "warning", 
+                        "elem": "content",
+                        "content": [
+                            { "block": "text", "mods": { "size": "m" } },
+                            {
+                                "block": "warning",
+                                "elem": "button-wrapper",
+                                "content": [
+                                    { "block": "text", "mods": { "size": "l" } }
+                                ]
+                            },
+                            { "block": "text", "mods": { "size": "m" } }
+                        ]
+                    },
+                    { "block": "text", "mods": { "size": "l" } }
+                ]
+            }`;
+            
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.deep.equal([
+                {
+                    "code": "WARNING.TEXT_SIZES_SHOULD_BE_EQUAL",
+                    "error": "Тексты в блоке warning должны быть одного размера и должны быть заданы",
+                    "location": {
+                        "start": { "column": 1, "line": 1 },
+                        "end": { "column": 14, "line": 21 }
+                    }
+                }
+            ]);
+        }) /* it */  
         
     }) /* describe: WARNING.TEXT_SIZES_SHOULD_BE_EQUAL */
 
@@ -1112,5 +1147,4 @@ describe('INVALID input of warning block', () => {
 
     }) /* describe: WARNING.INVALID_PLACEHOLDER_SIZE */
 
-    
 }) /* INVALID input of warning block */
