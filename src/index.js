@@ -11,14 +11,6 @@ const checkTextH2 = require('./text/checkTextH2.js');
 const checkTextH3 = require('./text/checkTextH3.js');
 
 
-const inputJson = `{
-	"block": "page",
-	"content": [
-	    { "block": "text", "mods": { "type": "h1" } },
-		{ "block": "text", "mods": { "type": "h1" } }
-	]
-}`;
-
 function getParentsCopy(parents) {
 	return JSON.parse(JSON.stringify(parents));
 }
@@ -146,5 +138,3 @@ function lint(jsonString) {
 }
 
 module.exports = lint;
-
-lint(inputJson);

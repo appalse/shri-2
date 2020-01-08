@@ -1,13 +1,19 @@
 'use strict'
 
 function getBlockName(node) {
-    let blockName = undefined;
+    let block = '';
+    let elem = '';
     node.children.forEach(element =>  {
         if (element.key.value === 'block') {
-                blockName = element.value.value;
-            }
+            block = element.value.value;
+        }
+        if (element.key.value === 'elem') {
+            elem = element.value.value;
+        }
     });
-    return blockName;
+    return (block && elem) 
+                        ? block + '__' + elem
+                        : (block ? block : undefined); 
 }
 
 function isSomeBlock(nodeChildren, blockName) {
