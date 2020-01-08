@@ -15,7 +15,7 @@ const steps = {
 };
 
 function checkButtonSize(precedingNode, parents, errorsList) {    
-    const etalonSize = parents.warning['etalonTextSize'];
+    const etalonSize = parents.warning.etalonTextSize;
     const buttonSize = precedingNode.size;
     if (!buttonSize || !etalonSize
             || buttonSize !== steps[etalonSize]) {
@@ -25,8 +25,8 @@ function checkButtonSize(precedingNode, parents, errorsList) {
 }
 
 function checkButtonsSizes(node, parents, errorsList) {
-    if (blocks.isWarningBlock(node) && parents.warning && parents.warning.preceding) {
-		parents.warning['preceding'].forEach(precedingNode => {
+    if (blocks.isWarningBlock(node) && parents.warning.preceding) {
+		parents.warning.preceding.forEach(precedingNode => {
 			if (precedingNode.block === 'button') {
 				checkButtonSize(precedingNode, parents, errorsList);
 			}

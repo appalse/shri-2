@@ -93,25 +93,31 @@ function processNode(node, parents, errorsList) {
 	}
 	if (parents['warning'] && !parents.warning['etalonTextSize'] && blockName === 'text') {
 		addEtalonTextSize(node, parents.warning);
-	}
-
-	checkTextSize(node, parents, errorsList);
-	checkButtonPosition(node, parents, errorsList);
-	checkPlaceholderSize(node, parents, errorsList);
+    }
+    
+    /* Проверяем текущий узел */
+    if (parents['warning']) {
+        checkTextSize(node, parents, errorsList);
+    	checkButtonPosition(node, parents, errorsList);
+	    checkPlaceholderSize(node, parents, errorsList);
+    }
 	if (blockName === 'text') {
 		const textType = utils.extractModsType(node);
 		checkTextH1(node, textType, parents, errorsList);
 		checkTextH2(node, parents, errorsList);
 		checkTextH3(node, parents, errorsList);
-	}
-
+    }
+    
+    /* Идем в глубину */
 	const contentField = utils.extractContent(node.children);
 	if (contentField) {
 		processContent(contentField, parents, errorsList);
 	}
 
-	/* Перед выходом из функции проверяем размеры button'ов на соответствие эталону */
-	checkButtonsSizes(node, parents, errorsList);
+    /* Перед выходом из функции проверяем размеры button'ов на соответствие эталону */
+    if (parents['warning']) {
+        checkButtonsSizes(node, parents, errorsList);
+    }
 
 	/* Возвращаем предыдущее значение перед выходом их функци */
 	if (currentParents !==  null) {
