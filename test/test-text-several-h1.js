@@ -15,6 +15,10 @@ describe('TEXT.SEVERAL_H1', () => {
                 {
                     "block": "text",
                     "mods": { "type": "h1" }
+                },
+                {
+                    "block": "text",
+                    "mods": { "type": "h1" }
                 }
             ]`;
             const result = lint(inputJson);
@@ -25,6 +29,14 @@ describe('TEXT.SEVERAL_H1', () => {
                     "location": {
                         "start": { "column": 17, "line": 6 },
                         "end": { "column": 18, "line": 9 }
+                    }
+                },
+                {
+                    "code": "TEXT.SEVERAL_H1",
+                    "error": "Заголовок первого уровня должен быть единственным на странице",
+                    "location": {
+                        "start": { "column": 17, "line": 10 },
+                        "end": { "column": 18, "line": 13 }
                     }
                 }
             ]);
