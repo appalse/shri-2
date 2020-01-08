@@ -10,8 +10,8 @@ describe('TEXT.INVALID_H2_POSITION', () => {
             const inputJson = `{
                 "block": "page",
                 "content": [
-                    { "block": "text", "mods": { "type": "h2", "size": "s" } },
-                    { "block": "text", "mods": { "size": "s", "type": "h1" } }
+                    { "block": "text", "mods": { "type": "h2" } },
+                    { "block": "text", "mods": { "type": "h1" } }
                 ]
             }`;
             const result = lint(inputJson);
@@ -35,8 +35,8 @@ describe('TEXT.INVALID_H2_POSITION', () => {
             const inputJson = `{
                 "block": "page",
                 "content": [
-                    { "block": "text", "mods": { "type": "h1", "size": "s" } },
-                    { "block": "text", "mods": { "size": "s", "type": "h2" } }
+                    { "block": "text", "mods": { "type": "h1" } },
+                    { "block": "text", "mods": { "type": "h2" } }
                 ]
             }`;
             const result = lint(inputJson);

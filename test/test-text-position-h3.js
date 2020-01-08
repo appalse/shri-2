@@ -10,8 +10,8 @@ describe('TEXT.INVALID_H3_POSITION', () => {
             const inputJson = `{
                 "block": "page",
                 "content": [
-                    { "block": "text", "mods": { "type": "h3", "size": "s" } },
-                    { "block": "text", "mods": { "type": "h2", "size": "s" } }
+                    { "block": "text", "mods": { "type": "h3" } },
+                    { "block": "text", "mods": { "type": "h2" } }
                 ]
             }`;
             const result = lint(inputJson);
