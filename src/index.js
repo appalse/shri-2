@@ -43,7 +43,7 @@ function updateWarningParent(nodeLocation, blockType, parents) {
 function updateParents(nodeLocation, blockType, parents) {
 	if (blockType === 'warning') {
 		return updateWarningParent(nodeLocation, blockType, parents);
-	}	
+    }
 }
 
 function addPreceding(node, blockName, parent) {
@@ -97,7 +97,7 @@ function processContent(contentField, parents, errorsList) {
 
 function processNode(node, parents, errorsList) {
 	const blockName = blocks.getBlockName(node);
-	let currentParents = updateParents(node.loc, blockName, parents);
+	let previousWarningParent = updateParents(node.loc, blockName, parents);
 	
 	if (parents['warning']) {
         if (blockName === 'button') {
@@ -136,15 +136,15 @@ function processNode(node, parents, errorsList) {
     }
 
 	/* Возвращаем предыдущее значение перед выходом их функци */
-	if (currentParents !==  null) {
-		parents[blockName] = currentParents;
+	if (blockName === 'warning' && previousWarningParent) {
+		parents[blockName] = previousWarningParent;
 	}
 }			
 
 function lint(jsonString) {
 	if (jsonString.length === 0) {
 		return [];
-	}
+    }
 	/* TODO check if input json is valid in terms of json syntax */
 	/* if not valid - throw expection or return special result */
 	const settings = {
