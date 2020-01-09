@@ -40,6 +40,9 @@ function updateWarningParent(nodeLocation, blockType, parents) {
 	return previousParent;
 }
 
+function updateTextParent(nodeLocation, blockType, parents) {
+}
+
 function updateParents(nodeLocation, blockType, parents) {
 	if (blockType === 'warning') {
 		return updateWarningParent(nodeLocation, blockType, parents);
@@ -91,13 +94,13 @@ function processContent(contentField, parents, errorsList) {
 	} else if (contentField.type === 'Array') {
 		processArrayOfNodes(contentField.children, parents, errorsList);
 	} else {
-		throw 'Object or Array is expected, but ' + contentField.type + ' is found';
+		/*throw 'Object or Array is expected, but ' + contentField.type + ' is found';*/
 	}
 }
 
 function processNode(node, parents, errorsList) {
 	const blockName = blocks.getBlockName(node);
-	let previousWarningParent = updateParents(node.loc, blockName, parents);
+	let previousParent = updateParents(node.loc, blockName, parents);
 	
 	if (parents['warning']) {
         if (blockName === 'button') {
@@ -107,12 +110,14 @@ function processNode(node, parents, errorsList) {
 		    addEtalonTextSize(node, parents.warning);
         }
 
-        /* Проверяем текущий узел */
+        // Проверяем текущий узел 
         checkTextSize(node, parents, errorsList);
     	checkButtonPosition(node, parents, errorsList);
 	    checkPlaceholderSize(node, parents, errorsList);
     }
-    if (blockName === 'text') {
+    const previousH2 = parents['headingH2List'] ? getParentsCopy(parents.headingH2List) : undefined;
+    const previousH3 = parents['headingH3List'] ? getParentsCopy(parents.headingH3List) : undefined;
+    if (blockgitName === 'text') {
         const textType = utils.extractModsType(node);
         if (textType === 'h2') {
             addHeadingInList(node.loc, 'headingH2List', parents);
@@ -124,21 +129,26 @@ function processNode(node, parents, errorsList) {
 		checkTextH3(node, textType, parents, errorsList);
     }
     
-    /* Идем в глубину */
+    // Идем в глубину 
 	const contentField = utils.extractContent(node.children);
 	if (contentField) {
 		processContent(contentField, parents, errorsList);
 	}
 
-    /* Перед выходом из функции проверяем размеры button'ов на соответствие эталону */
+    // Перед выходом из функции проверяем размеры button'ов на соответствие эталону 
     if (parents['warning']) {
         checkButtonsSizes(node, parents, errorsList);
     }
 
-	/* Возвращаем предыдущее значение перед выходом их функци */
-	if (blockName === 'warning' && previousWarningParent) {
-		parents[blockName] = previousWarningParent;
-	}
+	// Возвращаем предыдущее значение перед выходом их функции 
+	if ((blockName === 'warning') && previousParent) {
+		parents[blockName] = previousParent;
+    }
+    if (blockName === 'text') {
+        parents['headingH2List'] = previousH2;
+        parents['headingH3List'] = previousH3;
+    }   
+
 }			
 
 function lint(jsonString) {
@@ -158,3 +168,4 @@ function lint(jsonString) {
 }
 
 module.exports = lint;
+
