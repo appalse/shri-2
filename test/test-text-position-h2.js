@@ -51,34 +51,6 @@ describe('TEXT.INVALID_H2_POSITION', () => {
             ]);
         }) /* it */
 
-        it('h2 before nested h1', () => {
-            const inputJson = `{
-                "block": "page",
-                "content": [
-                    {
-                        "block": "card",
-                        "content": {
-                            "block": "form",
-                            "content": 
-                                { "block": "text", "mods": { "type": "h2" } }
-                        }
-                    },
-                    { "block": "text", "mods": { "type": "h1" } }
-                ]
-            }`;
-            const result = lint(inputJson);
-            expect(result).to.be.an('array').that.is.deep.equal([
-                {
-                    "code": "TEXT.INVALID_H2_POSITION",
-                    "error": "Заголовок второго уровня не может находиться перед заголовком первого уровня на том же или более глубоком уровне вложенности",
-                    "location": {
-                        "start": { "column": 33, "line": 9 },
-                        "end": { "column": 78, "line": 9 }
-                    }
-                }
-            ]);
-        }) /* it */
-
         it('h2 before internal nested h1', () => {
             const inputJson = `{
                 "block": "page",
@@ -187,6 +159,25 @@ describe('TEXT.INVALID_H2_POSITION', () => {
                             { "block": "text", "mods": { "type": "h2" } }
                         ]
                     }
+                ]
+            }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.empty;
+        }) /* it */
+
+        it('h2 before h1 but in other node', () => {
+            const inputJson = `{
+                "block": "page",
+                "content": [
+                    {
+                        "block": "card",
+                        "content": {
+                            "block": "form",
+                            "content": 
+                                { "block": "text", "mods": { "type": "h2" } }
+                        }
+                    },
+                    { "block": "text", "mods": { "type": "h1" } }
                 ]
             }`;
             const result = lint(inputJson);

@@ -30,6 +30,50 @@ describe('TEXT.INVALID_H3_POSITION', () => {
             ]);
         }) /* it */
        
+        it('Test from Andrey', () => {
+            const inputJson = `[
+                {
+                    "block": "text",
+                    "mods": { "type": "p" },
+                    "content": [
+                        {
+                            "block": "text",
+                            "mods": { "type": "h2" }
+                        },
+                        {
+                            "block": "text",
+                            "mods": { "type": "h3" }
+                        }
+                    ]
+                },
+                {
+                    "block": "text",
+                    "mods": { "type": "p" },
+                    "content": [
+                        {
+                            "block": "text",
+                            "mods": { "type": "h2" }
+                        },
+                        {
+                            "block": "text",
+                            "mods": { "type": "h2" }
+                        }
+                    ]
+                }
+            ]`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.deep.equal([
+                {
+                    "code": "TEXT.INVALID_H3_POSITION",
+                    "error": "Заголовок третьего уровня не может находиться перед заголовком второго уровня на том же или более глубоком уровне вложенности",
+                    "location": {
+                        "start": { "column": 25, "line": 10 },
+                        "end": { "column": 26, "line": 13 }
+                    }
+                }
+            ]);
+        }) /* it */
+
         it('h3 before h2', () => {
             const inputJson = `{
                 "block": "page",
@@ -46,32 +90,6 @@ describe('TEXT.INVALID_H3_POSITION', () => {
                     "location": {
                         "start": { "column": 21, "line": 4 },
                         "end": { "column": 66, "line": 4 }
-                    }
-                }
-            ]);
-        }) /* it */
-
-        it('Nested h3 before h2', () => {
-            const inputJson = `{
-                "block": "page",
-                "content": [
-                    { 
-                        "block": "card",
-                        "content": [
-                            { "block": "text", "mods": { "type": "h3" } }        
-                        ] 
-                    },
-                    { "block": "text", "mods": { "type": "h2" } }
-                ]
-            }`;
-            const result = lint(inputJson);
-            expect(result).to.be.an('array').that.is.deep.equal([
-                {
-                    "code": "TEXT.INVALID_H3_POSITION",
-                    "error": "Заголовок третьего уровня не может находиться перед заголовком второго уровня на том же или более глубоком уровне вложенности",
-                    "location": {
-                        "start": { "column": 29, "line": 7 },
-                        "end": { "column": 74, "line": 7 }
                     }
                 }
             ]);
@@ -137,6 +155,23 @@ describe('TEXT.INVALID_H3_POSITION', () => {
                             { "block": "text", "mods": { "type": "h3" } }        
                         ]
                     }
+                ]
+            }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.empty;
+        }) /* it */
+
+        it('h3 before h2 but on other node', () => {
+            const inputJson = `{
+                "block": "page",
+                "content": [
+                    { 
+                        "block": "card",
+                        "content": [
+                            { "block": "text", "mods": { "type": "h3" } }        
+                        ] 
+                    },
+                    { "block": "text", "mods": { "type": "h2" } }
                 ]
             }`;
             const result = lint(inputJson);
