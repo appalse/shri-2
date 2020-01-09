@@ -141,7 +141,7 @@ function processNode(node, parents, errorsList) {
     }
 
 	// Возвращаем предыдущее значение перед выходом их функции 
-	if ((blockName === 'warning') && previousParent) {
+	if (blockName === 'warning' && previousParent) {
 		parents[blockName] = previousParent;
     }
     if (blockName === 'text') {
