@@ -11,76 +11,13 @@ const checkTextH2 = require('./text/checkTextH2.js');
 const checkTextH3 = require('./text/checkTextH3.js');
 const Parents = require('./Parents.js');
 const ErrorList = require('./ErrorList.js');
+const Processor = require('./Processor.js');
 
-
-function getParentsCopy(parents) {
-	return JSON.parse(JSON.stringify(parents));
-}
-
-function copyLocation(source, dest) {
-	dest.start.line = source.start.line;
-	dest.start.column = source.start.column;
-	dest.end.line = source.end.line;
-	dest.end.column = source.end.column;
-}
-
-function updateWarningParent(nodeLocation, parents) {
-	const previousParent = parents.warning ? getParentsCopy(parents.warning) : undefined;
-	if (parents.warning) {
-		parents.warning['etalonTextSize'] = undefined;
-		parents.warning['preceding'] = [];
-		copyLocation(nodeLocation, parents.warning.loc);		
-	} else {
-		let newParent = {
-			'etalonTextSize': undefined,
-			'preceding': [],
-			'loc': { 'start': {'line': 0, 'column': 0}, 'end': {'line': 0, 'column': 0}}
-		};
-		copyLocation(nodeLocation, newParent.loc)
-		parents.warning  = newParent;
-	}
-	return previousParent;
-}
-
-function updateTextParent(nodeLocation, blockType, parents) {
-}
 
 function updateParents(nodeLocation, blockType, parents) {
 	if (blockType === 'warning') {
-		return updateWarningParent(nodeLocation, parents);
+        return parents.updateWarning(nodeLocation);
     }
-}
-
-function addPreceding(node, blockName, parent) {
-	let newPreceding = {
-		'block': blockName,
-		'loc': { 'start': {'line': 0, 'column': 0}, 'end': {'line': 0, 'column': 0}}
-	};
-	copyLocation(node.loc, newPreceding.loc);
-	newPreceding['size'] = utils.extractModsSize(node);
-	parent['preceding'].push(newPreceding);
-}
-
-function addEtalonTextSize(node, parent) {
-	if (parent.etalonTextSize) {
-		return; /* эталонный размер текста уже задан */
-	}
-	let modsSize = utils.extractModsSize(node);
-	if (modsSize) {
-		parent['etalonTextSize'] = modsSize;
-	} 
-}
-
-function addHeadingInList(nodeLocation, headingListName, parents) {
-    if (!parents[headingListName]) {
-        parents[headingListName] = [];
-    }
-    parents[headingListName].push({
-        'loc': { 
-            'start': { 'line': nodeLocation.start.line, 'column': nodeLocation.start.column }, 
-            'end': { 'line': nodeLocation.end.line, 'column': nodeLocation.end.column }
-        }
-    });
 }
 
 function processArray(contentArray, parents, errorsList) {
@@ -94,27 +31,27 @@ function processObject(node, parents, errorsList) {
 	const blockName = blocks.getBlockName(node);
 	let previousParent = updateParents(node.loc, blockName, parents);
 	
-	if (parents.warning) {
+	if (parents.hasWarning()) {
         if (blockName === 'button') {
-            addPreceding(node, 'button', parents.warning);
+            const modsSize = utils.extractModsSize(node);
+            parents.addWarningPreceding(node.loc, 'button', modsSize);
         }
-	    if (!parents.warning.etalonTextSize && blockName === 'text') {
-		    addEtalonTextSize(node, parents.warning);
+	    if (blockName === 'text') {
+            const modsSize = utils.extractModsSize(node);
+		    parents.addWarningEtalonTextSize(modsSize);
         }
 
         // Проверяем текущий узел 
         checkTextSize(node, parents, errorsList);
     	checkButtonPosition(node, parents, errorsList);
-	    checkPlaceholderSize(node, parents, errorsList);
+	    checkPlaceholderSize(node, errorsList);
     }
-    const previousH2 = parents.headingH2List ? getParentsCopy(parents.headingH2List) : undefined;
-    const previousH3 = parents.headingH3List ? getParentsCopy(parents.headingH3List) : undefined;
+    const previousH2 = parents.getPreviousH2List();
+    const previousH3 = parents.getPreviousH3List();
     if (blockName === 'text') {
         const textType = utils.extractModsType(node);
-        if (textType === 'h2') {
-            addHeadingInList(node.loc, 'headingH2List', parents);
-        } else if (textType === 'h3') {
-            addHeadingInList(node.loc, 'headingH3List', parents);
+        if (textType === 'h2' || textType === 'h3') {
+            parents.addHeadingInList(node.loc, textType);
         }
 		checkTextH1(node, textType, parents, errorsList);
 		checkTextH2(node, textType, parents, errorsList);
@@ -128,17 +65,17 @@ function processObject(node, parents, errorsList) {
 	}
 
     // Перед выходом из функции проверяем размеры button'ов на соответствие эталону 
-    if (parents.warning) {
+    if (parents.hasWarning()) {
         checkButtonsSizes(node, parents, errorsList);
     }
 
 	// Возвращаем предыдущее значение перед выходом их функции 
 	if (blockName === 'warning' && previousParent) {
-		parents[blockName] = previousParent;
+        parents.setWarningParent(previousParent);
     }
     if (blockName === 'text') {
-        parents['headingH2List'] = previousH2;
-        parents['headingH3List'] = previousH3;
+        parents.setHeadingList('h2', previousH2);
+        parents.setHeadingList('h3', previousH3);
     }   
 }	
 
@@ -163,22 +100,23 @@ function lint(jsonString) {
 	};
     const parsedInput = parse(jsonString, settings);
     
-	let parents = {
+	/*let parents = {
         'warning': undefined,
         'headingH2List': undefined,
         'headingH3List': undefined
-    };
+    };*/
 
     // class with objects in order to collect information about nodes while going through ast
-    //let parents = new Parents();
+    let parents = new Parents();
     // output array
     let errorsList = new ErrorList();
+    /* use Processor class */
     processNode(parsedInput, parents, errorsList);
 	return errorsList.get();
 }
 
 module.exports = lint;
-
+/*
 let r = lint(`{
     "block": "warning",
     "content": [
@@ -188,4 +126,4 @@ let r = lint(`{
     ]
 }`);
 
-console.log(r[0]);
+console.log(r[0]);*/

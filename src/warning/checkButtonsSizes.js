@@ -14,21 +14,20 @@ const steps = {
     'xl': 'xxl'
 };
 
-function checkButtonSize(precedingNode, parents, errorsList) {    
-    const etalonSize = parents.warning.etalonTextSize;
+function checkButtonSize(precedingNode, etalonSize, errorsList) {    
     const buttonSize = precedingNode.size;
     if (!buttonSize || !etalonSize
             || buttonSize !== steps[etalonSize]) {
-                /* Пополняем errorsList */
                 errorsList.push(errors.getError(errors.ER_WARN_BTN_SIZE, precedingNode.loc));
     }
 }
 
 function checkButtonsSizes(node, parents, errorsList) {
-    if (blocks.isWarningBlock(node) && parents.warning.preceding) {
-		parents.warning.preceding.forEach(precedingNode => {
+    if (blocks.isWarningBlock(node) && parents.hasWarningPreceding()) {
+        const etalonSize = parents.getWarningEtalonTextSize();
+		parents.getWarningPreceding().forEach(precedingNode => {
 			if (precedingNode.block === 'button') {
-				checkButtonSize(precedingNode, parents, errorsList);
+				checkButtonSize(precedingNode, etalonSize, errorsList);
 			}
 		});
 	}

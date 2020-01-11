@@ -7,9 +7,9 @@ const errors = require('./../errors.js');
 const blocks = require('./../blocks.js');
 
 function checkButtonPosition(node, parents, errorsList) {
-    if (parents.warning.preceding.length > 0
+    if (parents.hasWarningPreceding()
         && blocks.isPlaceholderBlock(node)) {
-            parents.warning.preceding.forEach((precedingNode) => {
+            parents.getWarningPreceding().forEach((precedingNode) => {
                 if (precedingNode.block === 'button') {
                     errorsList.pushIfNotExist(
                         errors.getError(errors.ER_WARN_BTN_POS, precedingNode.loc));

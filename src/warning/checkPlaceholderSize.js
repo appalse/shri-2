@@ -6,7 +6,7 @@ const utils = require('./../utils.js');
 const errors = require('./../errors.js');
 const blocks = require('./../blocks.js');
 
-function checkPlaceholderSize(node, parents, errorsList) {
+function checkPlaceholderSize(node, errorsList) {
     if (blocks.isPlaceholderBlock(node)) {
         let modsSize = utils.extractModsSize(node);
         /* Должно быть равно s, m, l */

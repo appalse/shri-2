@@ -7,8 +7,8 @@
 const errors = require('./../errors.js');
 
 function checkTextH3(textNode, textType, parents, errorsList) {
-    if (textType === 'h2' && parents.headingH3List && parents.headingH3List.length > 0) {
-        parents.headingH3List.forEach(headingH3 => {
+    if (textType === 'h2' && parents.hasH3Headings()) {
+        parents.getH3Headings().forEach(headingH3 => {
             errorsList.pushIfNotExist(errors.getError(errors.ER_TXT_H3, headingH3.loc));
         });
     }
