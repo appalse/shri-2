@@ -3,7 +3,6 @@
 /* Блок button в блоке warning не может находиться перед блоком placeholder 
 на том же или более глубоком уровне вложенности */
 
-const utils = require('./../utils.js');
 const errors = require('./../errors.js');
 const blocks = require('./../blocks.js');
 
@@ -13,8 +12,7 @@ function checkButtonPosition(node, parents, errorsList) {
             parents.warning.preceding.forEach((precedingNode) => {
                 if (precedingNode.block === 'button') {
                     errorsList.pushIfNotExist(
-                        errors.getError(errors.ER_WARN_BTN_POS, precedingNode.loc), 
-                        utils.errorComparer);
+                        errors.getError(errors.ER_WARN_BTN_POS, precedingNode.loc));
                 }
             });
     }
