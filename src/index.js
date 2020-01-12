@@ -123,7 +123,7 @@ function lint(jsonString) {
 }
 
 module.exports = lint;
-
+/*
 let r = lint(`[
     {
         "block": "text",
@@ -141,4 +141,4 @@ let r = lint(`[
     }
 ]`);
 
-console.log(r[0]);
+console.log(r[0]);*/
