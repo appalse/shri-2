@@ -21,7 +21,7 @@ class Parents {
             'h1': undefined,
             'h2': [],
             'h3': []
-        }
+        };
     }
 
     setWarningParent(parentValue) {
@@ -39,45 +39,21 @@ class Parents {
         this.heading[headingListName] = listValue;
     }
 
-    getWarningEtalonTextSize() {
-        return this.warning.etalonTextSize;
-    }
+    getWarningEtalonTextSize() { return this.warning.etalonTextSize; }
+    getWarningPreceding() { return this.warning.preceding; }
+    getWarningLocation() { return this.warning.loc; }
+    getH2Headings() { return this.heading.h2; }
+    getH3Headings() { return this.heading.h3; }
 
-    getWarningPreceding() {
-        return this.warning.preceding;
-    }
-
-    getWarningLocation() {
-        return this.warning.loc;
-    }
-
-    getH2Headings() {
-        return this.heading.h2;
-    }
-
-    getH3Headings() {
-        return this.heading.h3;
-    }
-
-    hasWarning() {
-        return this.warning !== undefined;
-    }
+    hasWarning() { return this.warning !== undefined; }
 
     hasWarningPreceding() {
         return this.warning.preceding && this.warning.preceding.length > 0;
     }
 
-    hasH1Heading() {
-        return this.heading.h1 != undefined;
-    }
-
-    hasH2Headings() {
-        return this.heading.h2.length > 0;
-    }
-
-    hasH3Headings() {
-        return this.heading.h3.length > 0;
-    }
+    hasH1Heading() { return this.heading.h1 != undefined; }
+    hasH2Headings() { return this.heading.h2.length > 0; }
+    hasH3Headings() { return this.heading.h3.length > 0; }
 
     updateWarning(nodeLocation) {
         const previousParent = this.warning ? getFullDeepCopy(this.warning) : undefined;
@@ -118,15 +94,11 @@ class Parents {
     }
 
     getPreviousH2List() {
-        return this.heading.h2 
-            ? getFullDeepCopy(this.heading.h2) 
-            : undefined;
+        return getFullDeepCopy(this.heading.h2); 
     }
 
     getPreviousH3List() {
-        return this.heading.h3 
-            ? getFullDeepCopy(this.heading.h3) 
-            : undefined;
+        return getFullDeepCopy(this.heading.h3);
     }
 
     addHeadingInList(nodeLocation, headingListName) {
