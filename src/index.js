@@ -21,13 +21,18 @@ function updateParents(nodeLocation, blockType, parents) {
 }
 
 function processArray(contentArray, parents, errorsList) {
-	/* Вызываем обработку дальше в грубину */
+    /* Вызываем обработку дальше в грубину */
+    let headingSiblings = {
+        'h1': [],
+        'h2': [],
+        'h3': []
+    };
 	contentArray.forEach(node => {
-		processObject(node, parents, errorsList);
+		processObject(node, parents, errorsList, headingSiblings);
 	});
 }
 
-function processObject(node, parents, errorsList) {
+function processObject(node, parents, errorsList, headingSiblings) {
 	const blockName = blocks.getBlockName(node);
 	let previousParent = updateParents(node.loc, blockName, parents);
 	
@@ -53,9 +58,18 @@ function processObject(node, parents, errorsList) {
         if (textType === 'h2' || textType === 'h3') {
             parents.addHeadingInList(node.loc, textType);
         }
+        if (textType === 'h1' || textType === 'h2' || textType === 'h3') {
+            if (!headingSiblings[textType]) headingSiblings[textType] = [];
+            headingSiblings[textType].push({
+                'loc': { 
+                    'start': { 'line': node.loc.start.line, 'column': node.loc.start.column }, 
+                    'end': { 'line': node.loc.end.line, 'column': node.loc.end.column }
+                }
+            });
+        }
 		checkTextH1(node, textType, parents, errorsList);
-		checkTextH2(node, textType, parents, errorsList);
-		checkTextH3(node, textType, parents, errorsList);
+		checkTextH2(textType, parents, headingSiblings, errorsList);
+		checkTextH3(textType, parents, headingSiblings, errorsList);
     }
     
     // Идем в глубину 
@@ -81,7 +95,7 @@ function processObject(node, parents, errorsList) {
 
 function processNode(contentField, parents, errorsList) {
 	if (contentField.type === 'Object') {
-		processObject(contentField, parents, errorsList);
+		processObject(contentField, parents, errorsList, {});
 	} else if (contentField.type === 'Array') {
 		processArray(contentField.children, parents, errorsList);
 	} else {
@@ -99,31 +113,32 @@ function lint(jsonString) {
 		loc: true, // save location during parsing
 	};
     const parsedInput = parse(jsonString, settings);
-    
-	/*let parents = {
-        'warning': undefined,
-        'headingH2List': undefined,
-        'headingH3List': undefined
-    };*/
-
     // class with objects in order to collect information about nodes while going through ast
     let parents = new Parents();
     // output array
     let errorsList = new ErrorList();
     /* use Processor class */
-    processNode(parsedInput, parents, errorsList);
+    processNode(parsedInput, parents, errorsList, {});
 	return errorsList.get();
 }
 
 module.exports = lint;
-/*
-let r = lint(`{
-    "block": "warning",
-    "content": [
-        { "block": "text", "mods": { "size": "s" } },
-        { "block": "button", "mods": { "size": "m" } },
-        { "block": "placeholder", "mods": { "size": "m" } }
-    ]
-}`);
 
-console.log(r[0]);*/
+let r = lint(`[
+    {
+        "block": "text",
+        "mods": { "type": "h2" },
+        "content": [
+            { 
+                "block": "text",
+                "mods": { "type": "h3" }
+            }
+        ]
+    },
+    {
+        "block": "text",
+        "mods": { "type": "h1" }
+    }
+]`);
+
+console.log(r[0]);

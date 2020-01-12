@@ -6,9 +6,14 @@
 
 const errors = require('./../errors.js');
 
-function checkTextH2(textNode, textType, parents, errorsList) {
+function checkTextH2(textType, parents, headingSiblings, errorsList) {
     if (textType === 'h1' && parents.hasH2Headings()) {
         parents.getH2Headings().forEach(headingH2 => {
+            errorsList.pushIfNotExist(errors.getError(errors.ER_TXT_H2, headingH2.loc));
+        });
+    }
+    if (textType === 'h1' && headingSiblings['h2'] && headingSiblings['h2'].length > 0) {
+        headingSiblings['h2'].forEach(headingH2 => {
             errorsList.pushIfNotExist(errors.getError(errors.ER_TXT_H2, headingH2.loc));
         });
     }
