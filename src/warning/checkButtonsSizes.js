@@ -4,7 +4,6 @@
 (например, для размера l таким значением будет xl) */
 
 const errors = require('../errors.js');
-const blocks = require('./../blocks.js');
 
 const steps = {
     'xs': 's',
@@ -22,15 +21,12 @@ function checkButtonSize(precedingNode, etalonSize, errorsList) {
     }
 }
 
-function checkButtonsSizes(node, parents, errorsList) {
-    if (blocks.isWarningBlock(node) && parents.hasWarningPreceding()) {
-        const etalonSize = parents.getWarningEtalonTextSize();
-		parents.getWarningPreceding().forEach(precedingNode => {
-			if (precedingNode.block === 'button') {
-				checkButtonSize(precedingNode, etalonSize, errorsList);
-			}
-		});
-	}
+function checkButtonsSizes(etalonSize, warningPrecedings, errorsList) {
+    warningPrecedings.forEach(precedingNode => {
+        if (precedingNode.block === 'button') {
+            checkButtonSize(precedingNode, etalonSize, errorsList);
+        }
+    });
 }
 
 module.exports = checkButtonsSizes;
