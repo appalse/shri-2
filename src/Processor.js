@@ -46,7 +46,11 @@ class Processor {
         let headingSiblings = this.createHeadingSiblings();
         // process nodes one by one, going to the deepest level in every node
         jsonArray.forEach(jsonNode => {
-            this.processObject(jsonNode, headingSiblings);
+            if (jsonNode.type === 'Array') {
+                this.processObject(jsonNode.children[0], headingSiblings);
+            } else {
+                this.processObject(jsonNode, headingSiblings);
+            }
         });
     }
 
