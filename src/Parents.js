@@ -1,7 +1,6 @@
 'use strict'
 
 
-
 function getFullDeepCopy(jsonObject) {
 	return JSON.parse(JSON.stringify(jsonObject));
 }
@@ -22,6 +21,9 @@ class Parents {
             'h2': [],
             'h3': []
         };
+        this.grid = {
+            
+        };
     }
 
     setWarningParent(parentValue) {
@@ -39,6 +41,7 @@ class Parents {
         this.heading[headingListName] = listValue;
     }
 
+    getWarningDeepCopy() { return this.warning ? getFullDeepCopy(this.warning) : undefined; }
     getWarningEtalonTextSize() { return this.warning.etalonTextSize; }
     getWarningPreceding() { return this.warning.preceding; }
     getWarningLocation() { return this.warning.loc; }
@@ -56,7 +59,6 @@ class Parents {
     hasH3Headings() { return this.heading.h3.length > 0; }
 
     updateWarning(nodeLocation) {
-        const previousParent = this.warning ? getFullDeepCopy(this.warning) : undefined;
         if (this.warning) {
             this.warning['etalonTextSize'] = undefined;
             this.warning['preceding'] = [];
@@ -70,7 +72,6 @@ class Parents {
             copyLocation(nodeLocation, newParent.loc)
             this.warning  = newParent;
         }
-        return previousParent;
     }
 
     addWarningPreceding(nodeLocation, blockName, modSize) {
