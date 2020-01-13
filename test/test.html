@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8">
 	<title>Test</title>
 	<script src="./../build/linter.js"></script>
 </head>
@@ -8,7 +9,39 @@
 	
 	<script>
 		console.log('Hello from body');
-		lint('');
+		const res = lint(`{
+    "block": "grid",
+    "mods": {
+        "m-columns": "10"
+    },
+    "content": [
+        {
+            "block": "grid",
+            "elem": "fraction",
+            "elemMods": {
+                "m-col": "2"
+            },
+            "content": [
+                {
+                    "block": "payment"
+                }
+            ]
+        },
+        {
+            "block": "grid",
+            "elem": "fraction",
+            "elemMods": {
+                "m-col": "8"
+            },
+            "content": [
+                {
+                    "block": "offer"
+                }
+            ]
+        }
+    ]
+ }`);
+ console.log(res);
 	</script>
 
 </body>
