@@ -58,7 +58,7 @@ class Parents {
         return this.warning.preceding && this.warning.preceding.length > 0;
     }
 
-    hasH1Heading() { return this.heading.h1 != undefined; }
+    hasH1Heading() { return this.heading.h1 !== undefined; }
     hasH2Headings() { return this.heading.h2.length > 0; }
     hasH3Headings() { return this.heading.h3.length > 0; }
 
