@@ -31,8 +31,8 @@ function isButtonBlock(node) {
 	return isSomeBlock(node.children, 'button');
 }
 
-function extractModsField(node, fieldName) {
-	let modsIndex = node.children.findIndex(field => field.key.value === 'mods');
+function extractModsField(node, fieldKey, fieldName) {
+	let modsIndex = node.children.findIndex(field => field.key.value === fieldKey);
 	if (modsIndex === -1) return undefined;
 	let fieldValue = node.children[modsIndex].value.children.find(modsField => 
 														modsField.key.value === fieldName);
@@ -42,11 +42,11 @@ function extractModsField(node, fieldName) {
 }
 
 function extractModsType(node) {
-	return extractModsField(node, 'type');
+	return extractModsField(node, 'mods', 'type');
 }
 
 function extractModsSize(node) {
-	return extractModsField(node, 'size');
+	return extractModsField(node, 'mods', 'size');
 }
 
 function getTextBlockSize(node) {
@@ -63,6 +63,13 @@ function getButtonSize(node) {
 	}
 }
 
+function getGridMColumns(blockType, node) {
+	if (node.type !== 'Object') throw 'Object is expected, but ' + node.type + ' is found';
+	if (blockType === 'grid') {
+		return extractModsField(node, 'mods', 'm-columns');
+	}
+}
+
 function extractContent(nodeFields) {
 	let contentFields = nodeFields.filter(element => 
 								element.key.value === 'content');
@@ -73,11 +80,17 @@ function extractContent(nodeFields) {
 	return contentFields[0].value;
 }
 
+function getElemModsMCol(node) {
+    return extractModsField(node, 'elemMods', 'm-col');
+}
+
 module.exports = {
     getBlockElemName,
 	extractModsType,
 	extractModsSize,
 	getTextBlockSize,
 	getButtonSize,
-	extractContent
+	getGridMColumns,
+	extractContent,
+	getElemModsMCol
 }

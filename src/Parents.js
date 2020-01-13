@@ -21,9 +21,7 @@ class Parents {
             'h2': [],
             'h3': []
         };
-        this.grid = {
-            
-        };
+        this.grid = undefined;
     }
 
     setWarningParent(parentValue) {
@@ -41,12 +39,18 @@ class Parents {
         this.heading[headingListName] = listValue;
     }
 
-    getWarningDeepCopy() { return this.warning ? getFullDeepCopy(this.warning) : undefined; }
+	getWarningDeepCopy() { return this.warning ? getFullDeepCopy(this.warning) : undefined; }
+	getH2ListDeepCopy() { return getFullDeepCopy(this.heading.h2); }
+	getH3ListDeepCopy() { return getFullDeepCopy(this.heading.h3); }
+	getGridDeepCopy() { return this.grid ? getFullDeepCopy(this.grid) : undefined; }
     getWarningEtalonTextSize() { return this.warning.etalonTextSize; }
     getWarningPreceding() { return this.warning.preceding; }
-    getWarningLocation() { return this.warning.loc; }
+	getWarningLocation() { return this.warning.loc; }
     getH2Headings() { return this.heading.h2; }
     getH3Headings() { return this.heading.h3; }
+    getGridLocation() { return this.grid.loc; }
+    getGridContainerWidth() { return this.grid.mColumns; }
+    getGridMarketingWidth() { return this.grid.marketingWidth; }
 
     hasWarning() { return this.warning !== undefined; }
 
@@ -74,6 +78,38 @@ class Parents {
         }
     }
 
+    updateGrid(modsMColumns, jsonNode) {
+        if (this.grid) {
+            this.grid['mColumns'] = modsMColumns;
+            this.grid['marketingWidth'] = 0;
+            copyLocation(jsonNode.loc, this.grid.loc);		
+        } else {
+            let newParent = {
+                'mColumns': modsMColumns,
+                'marketingWidth': 0,
+                'loc': { 'start': {'line': 0, 'column': 0}, 'end': {'line': 0, 'column': 0}}
+            };
+            copyLocation(jsonNode.loc, newParent.loc)
+            this.grid  = newParent;
+		}
+	}
+
+	addGridFraction(elemModsMCol, fractionBlockType) {
+		if (!this.grid || !fractionBlockType) return;
+		const info = 'info';
+		const marketing = 'marketing';
+		const fractionType = {
+			payment: info, warning: info, product: info, 
+			history: info, cover: info, collect: info, 
+			articles: info, subscribtion: info, event: info,
+			commercial: marketing, offer: marketing
+        }
+        if (fractionType[fractionBlockType] === marketing) {
+            const width = parseInt(elemModsMCol, 10);
+            this.grid.marketingWidth += width;
+        }
+	}
+
     addWarningPreceding(nodeLocation, blockName, modSize) {
         if(!this.warning) return; // TODO а надо ли?
         let newPreceding = {
@@ -92,14 +128,6 @@ class Parents {
         if (modsSize) {
             this.warning['etalonTextSize'] = modsSize;
         } 
-    }
-
-    getPreviousH2List() {
-        return getFullDeepCopy(this.heading.h2); 
-    }
-
-    getPreviousH3List() {
-        return getFullDeepCopy(this.heading.h3);
     }
 
     addHeadingInList(nodeLocation, headingListName) {

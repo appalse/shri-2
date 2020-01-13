@@ -8,6 +8,7 @@ const checkPlaceholderSize = require('./warning/checkPlaceholderSize.js');
 const checkTextH1 = require('./text/checkTextH1.js');
 const checkTextH2 = require('./text/checkTextH2.js');
 const checkTextH3 = require('./text/checkTextH3.js');
+const checkGrid = require('./grid/checkGrid.js');
 const Parents = require('./Parents.js');
 const ErrorList = require('./ErrorList.js');
 
@@ -52,11 +53,21 @@ class Processor {
     processObject(jsonNode, currentHeadingSiblings) {
         // update siblings
         this.headingSiblings = currentHeadingSiblings;
-        // update warning parents
-        const blockType = utils.getBlockElemName(jsonNode); // can look like 'block'/'block__elem'/undefined
-        if (blockType === 'warning') {
-            this.parents.updateWarning(jsonNode.loc);
-        } 
+        // blockType can look like 'block'/'block__elem'/undefined
+		const blockType = utils.getBlockElemName(jsonNode); 
+		// update warning parents
+		if (blockType === 'warning') { this.parents.updateWarning(jsonNode.loc); }
+		// update grid parents
+        const modsMColumns = utils.getGridMColumns(blockType, jsonNode);
+		if (modsMColumns) { this.parents.updateGrid(modsMColumns, jsonNode); }
+		const elemModsMCol = utils.getElemModsMCol(jsonNode);
+		if (blockType === 'grid__fraction' && elemModsMCol) {
+            const contentField = utils.extractContent(jsonNode.children);
+            if (contentField) {
+                const fractionBlockType = utils.getBlockElemName(contentField.children[0]);
+                this.parents.addGridFraction(elemModsMCol, fractionBlockType);
+            }
+		}
         // save parents before node processing
         const previousParents = this.getPreviousParents();
         // node processing
@@ -65,7 +76,8 @@ class Processor {
         this.setPreviousParents(blockType, {
             previousWarning: previousParents.previousWarning, 
             previousH2: previousParents.previousH2, 
-            previousH3: previousParents.previousH3
+			previousH3: previousParents.previousH3,
+			previousGrid: previousParents.previousGrid
         });
     }
 
@@ -87,8 +99,9 @@ class Processor {
     getPreviousParents() {
         return {
             'previousWarning': this.parents.getWarningDeepCopy(),
-            'previousH2': this.parents.getPreviousH2List(),
-            'previousH3': this.parents.getPreviousH3List()
+            'previousH2': this.parents.getH2ListDeepCopy(),
+			'previousH3': this.parents.getH3ListDeepCopy(),
+			'previousGrid': this.parents.getGridDeepCopy()
         };
     }
 
@@ -112,7 +125,8 @@ class Processor {
     }   
 
     findErrorsAfter(blockType, jsonNode) {
-        this.findWarningErrorsAfter(blockType);
+		this.findWarningErrorsAfter(blockType);
+		this.findGridErrorsAfter(blockType);
     } 
 
     findWarningErrorsBefore(blockType, modsSize, nodeLocation) {
@@ -160,7 +174,13 @@ class Processor {
             checkTextH2(textType, this.parents, this.headingSiblings.h2, this.errorsList);
             checkTextH3(textType, this.parents, this.headingSiblings.h3, this.errorsList);
         }
-    }
+	}
+	
+	findGridErrorsAfter(blockType) {
+		if (blockType === 'grid') {
+			checkGrid(this.parents, this.errorsList);
+		}
+	}
 }
 
 module.exports = Processor;
