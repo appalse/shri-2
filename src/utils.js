@@ -1,6 +1,36 @@
 'use strict'
 
 
+function getBlockElemName(node) {
+    let block = '';
+    let elem = '';
+    node.children.forEach(element =>  {
+        if (element.key.value === 'block') {
+            block = element.value.value;
+        }
+        if (element.key.value === 'elem') {
+            elem = element.value.value;
+        }
+    });
+    return (block && elem) 
+                        ? block + '__' + elem
+                        : (block ? block : undefined); 
+}
+
+function isSomeBlock(nodeChildren, blockName) {
+	return nodeChildren.some(element => 
+								element.key.value === 'block' 
+								&& element.value.value === blockName);
+}
+
+function isTextBlock(node) {
+	return isSomeBlock(node.children, 'text');
+}
+
+function isButtonBlock(node) {
+	return isSomeBlock(node.children, 'button');
+}
+
 function extractModsField(node, fieldName) {
 	let modsIndex = node.children.findIndex(field => field.key.value === 'mods');
 	if (modsIndex === -1) return undefined;
@@ -44,6 +74,7 @@ function extractContent(nodeFields) {
 }
 
 module.exports = {
+    getBlockElemName,
 	extractModsType,
 	extractModsSize,
 	getTextBlockSize,
