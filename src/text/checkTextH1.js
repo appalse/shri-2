@@ -5,10 +5,10 @@
 
 const errors = require('./../errors.js');
 
-function checkTextH1(textNode, textType, parents, errorsList) {
+function checkTextH1(textType, parents, nodeLocation, errorsList) {
     if (textType === 'h1') {
         if (parents.hasH1Heading()) {
-            errorsList.push(errors.getError(errors.ER_TXT_H1, textNode.loc));
+            errorsList.push(errors.getError(errors.ER_TXT_H1, nodeLocation));
         } else {
             parents.setH1Heading(textType);
         }

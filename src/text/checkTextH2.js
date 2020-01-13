@@ -6,16 +6,18 @@
 
 const errors = require('./../errors.js');
 
-function checkTextH2(textType, parents, headingSiblings, errorsList) {
-    if (textType === 'h1' && parents.hasH2Headings()) {
-        parents.getH2Headings().forEach(headingH2 => {
-            errorsList.pushIfNotExist(errors.getError(errors.ER_TXT_H2, headingH2.loc));
-        });
-    }
-    if (textType === 'h1' && headingSiblings['h2'] && headingSiblings['h2'].length > 0) {
-        headingSiblings['h2'].forEach(headingH2 => {
-            errorsList.pushIfNotExist(errors.getError(errors.ER_TXT_H2, headingH2.loc));
-        });
+function checkTextH2(textType, parents, headingSiblingsH2, errorsList) {
+    if (textType === 'h1') {
+        if (parents.hasH2Headings()) {
+            parents.getH2Headings().forEach(headingH2 => {
+                errorsList.pushIfNotExist(errors.getError(errors.ER_TXT_H2, headingH2.loc));
+            });
+        }
+        if(headingSiblingsH2.length > 0) {
+            headingSiblingsH2.forEach(headingH2 => {
+                errorsList.pushIfNotExist(errors.getError(errors.ER_TXT_H2, headingH2.loc));
+            });
+        }
     }
 }
 
