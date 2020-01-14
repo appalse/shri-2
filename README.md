@@ -6,6 +6,21 @@
 https://github.com/appalse/shri-2/blob/master/README-Plan.md
 
 
+## Сборка и тесты
+
+Собрать bundle в .\build\linter.js:
+```
+npm run build
+```
+
+Запустить тесты:
+```
+mocha --reporter mochawesome
+```
+
+Результаты тестов лежат в .\mochawesome-report\mochawesome.html
+
+
 ## Комментарии по выбору инструментов
 
 ### Среда разработки - Visual Studio Code
