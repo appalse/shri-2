@@ -18,17 +18,27 @@ https://github.com/appalse/shri-2/blob/master/README-Plan.md
 
 ## Сборка и тесты
 
-Собрать bundle в .\build\linter.js:
+Скачать или клонировать репозиторий, установить зависимости. Запустить в корневом каталоге:
+```
+npm install
+```
+
+Чтобы собрать bundle в .\build\linter.js:
 ```
 npm run build
 ```
 
-Запустить тесты:
+Чтобы запустить тесты:
 ```
 mocha --reporter mochawesome
 ```
+Отчет о тестировании находится в .\mochawesome-report\mochawesome.html
 
-Результаты тестов лежат в .\mochawesome-report\mochawesome.html
+Чтобы запустить ESLint:
+```
+eslint .\src\ -f node_modules/eslint-detailed-reporter/lib/detailed.js -o eslint-report.html
+```
+Отчет об ошибках codestyle находится в .\eslint-report.html
 
 
 ## Комментарии по выбору инструментов
