@@ -5,20 +5,13 @@
 и этот размер должен быть определен. 
 Размер первого из таких элементов в форме будем считать эталонным */
 
-const utils = require('./../utils.js');
 const errors = require('./../errors.js');
-const blocks = require('./../blocks.js');
 
-function checkTextSize(node, parents, errorsList) {
-    if (blocks.isTextBlock(node)) {
-            let modsSize = utils.extractModsSize(node);
-            if (!modsSize 
-                || modsSize !== parents.warning.etalonTextSize) {
-                    /* Должно быть равно эталонному и быть задано */
-                    const newError = errors.getError(errors.ER_WARN_TXT_NOT_EQ, parents.warning.loc);
-                    errorsList.pushIfNotExist(newError, utils.errorComparer);
-            }                 
-    }
+function checkTextSize(modsSize, etalonSize, loc, errorsList) {
+    if (!modsSize 
+        || modsSize !== etalonSize) {
+            errorsList.pushIfNotExist(errors.getError(errors.ER_WARN_TXT_NOT_EQ, loc));
+    }                 
 }
 
 module.exports = checkTextSize;

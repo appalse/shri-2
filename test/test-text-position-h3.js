@@ -28,51 +28,7 @@ describe('TEXT.INVALID_H3_POSITION', () => {
                     }
                 }
             ]);
-        }) /* it */
-       
-        it('Test from Andrey', () => {
-            const inputJson = `[
-                {
-                    "block": "text",
-                    "mods": { "type": "p" },
-                    "content": [
-                        {
-                            "block": "text",
-                            "mods": { "type": "h2" }
-                        },
-                        {
-                            "block": "text",
-                            "mods": { "type": "h3" }
-                        }
-                    ]
-                },
-                {
-                    "block": "text",
-                    "mods": { "type": "p" },
-                    "content": [
-                        {
-                            "block": "text",
-                            "mods": { "type": "h2" }
-                        },
-                        {
-                            "block": "text",
-                            "mods": { "type": "h2" }
-                        }
-                    ]
-                }
-            ]`;
-            const result = lint(inputJson);
-            expect(result).to.be.an('array').that.is.deep.equal([
-                {
-                    "code": "TEXT.INVALID_H3_POSITION",
-                    "error": "Заголовок третьего уровня не может находиться перед заголовком второго уровня на том же или более глубоком уровне вложенности",
-                    "location": {
-                        "start": { "column": 25, "line": 10 },
-                        "end": { "column": 26, "line": 13 }
-                    }
-                }
-            ]);
-        }) /* it */
+        }) /* it */ 
 
         it('h3 before h2', () => {
             const inputJson = `{
@@ -96,6 +52,9 @@ describe('TEXT.INVALID_H3_POSITION', () => {
         }) /* it */
 
     }) /* describe: INVALID */
+
+
+
     
     describe('VALID', () => {
 
@@ -174,6 +133,41 @@ describe('TEXT.INVALID_H3_POSITION', () => {
                     { "block": "text", "mods": { "type": "h2" } }
                 ]
             }`;
+            const result = lint(inputJson);
+            expect(result).to.be.an('array').that.is.empty;
+        }) /* it */
+
+        it('Test nested h3 before h2 but in deeper level', () => {
+            const inputJson = `[
+                {
+                    "block": "text",
+                    "mods": { "type": "p" },
+                    "content": [
+                        {
+                            "block": "text",
+                            "mods": { "type": "h2" }
+                        },
+                        {
+                            "block": "text",
+                            "mods": { "type": "h3" }
+                        }
+                    ]
+                },
+                {
+                    "block": "text",
+                    "mods": { "type": "p" },
+                    "content": [
+                        {
+                            "block": "text",
+                            "mods": { "type": "h2" }
+                        },
+                        {
+                            "block": "text",
+                            "mods": { "type": "h2" }
+                        }
+                    ]
+                }
+            ]`;
             const result = lint(inputJson);
             expect(result).to.be.an('array').that.is.empty;
         }) /* it */
