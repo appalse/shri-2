@@ -15,5 +15,9 @@
         "ecmaVersion": 2018
     },
     "rules": {
+        "semi": ["error", "always"],
+        "space-before-function-paren": ["error", "never"],
+        "indent": ["error", 4],
+        "no-extend-native": ["error", { "exceptions": ["Array"] }]
     }
 }
