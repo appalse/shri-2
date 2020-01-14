@@ -10,6 +10,7 @@ https://github.com/appalse/shri-2/blob/master/README-Plan.md
 
 | Папка | Описание |
 | ----- | -------- |
+| .\.vscode\ | настройки VS Code, для запуска под отладчиком |
 | .\build\ | бандл с результатами сборки |
 | .\mochawesome-report\ | результаты автотестов, **mochawesome.html** открывается локально и отображает последний прогон |
 | .\src\   | исходный код        |
