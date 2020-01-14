@@ -14,5 +14,19 @@ module.exports = {
         libraryTarget: 'umd',
         umdNamedDefine: true,
         globalObject: `(typeof self !== 'undefined' ? self : this)`
-    }
+    },
+    module: {
+        rules: [
+          {
+            test: /\.m?js$/,
+            exclude: /(node_modules|bower_components|test)/,
+            use: {
+              loader: 'babel-loader',
+              options: {
+                presets: ['@babel/preset-env']
+              }
+            }
+          }
+        ]
+      }
   };
