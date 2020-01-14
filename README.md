@@ -1,8 +1,10 @@
 # Задание 2.
 
+
 ## План
 
 https://github.com/appalse/shri-2/blob/master/README-Plan.md
+
 
 ## Комментарии по выбору инструментов
 
@@ -30,11 +32,16 @@ https://github.com/appalse/shri-2/blob/master/README-Plan.md
 
 ### Плагины
 
+* babel - для трансипилирования Javascript (2015+, ES6+) в код, поддерживаемый старыми браузерами, так как в задании сказано, что линтер должен работать в браузерах.
+
+* ESLint - для проверки кода, codestyle.
+
 * clean-webpack-plugin - плагин webpack, который чистит папку с результатами сборки. Упоминался в документации к webpack, поэтому взят оттуда.
 
 * Для генерации бандла, который можно запустить в html и в node.js, применено решение [отсюда](https://stackoverflow.com/questions/49111086/webpack-4-universal-library-target).
 
 * mochawesome - модуль для генерации отчета о тестировании. Выбирала по скриншотам, у mochawesome самые удобные и понятны отчеты. 
+
 
 ## Комментарии по реализации
 
