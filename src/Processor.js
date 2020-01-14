@@ -33,6 +33,7 @@ class Processor {
     getErrors() { return this.errorsList.get(); }
 
     processNode(jsonNode) {
+        if (!jsonNode) return;
         if (jsonNode.type === 'Array') {
             this.processArray(jsonNode.children);
         } else if (jsonNode.type === 'Object') {
@@ -43,10 +44,12 @@ class Processor {
     }
 
     processArray(jsonArray) {
+        if (!jsonArray) return;
         let headingSiblings = this.createHeadingSiblings();
         // process nodes one by one, going to the deepest level in every node
         jsonArray.forEach(jsonNode => {
-            if (jsonNode.type === 'Array') {
+            if (!jsonNode) return;
+            if (jsonNode.type === 'Array' && jsonNode.children && jsonNode.children.length > 0) {
                 this.processObject(jsonNode.children[0], headingSiblings);
             } else {
                 this.processObject(jsonNode, headingSiblings);
@@ -67,7 +70,8 @@ class Processor {
 		const elemModsMCol = utils.getElemModsMCol(jsonNode);
 		if (blockType === 'grid__fraction' && elemModsMCol) {
             const contentField = utils.extractContent(jsonNode.children);
-            if (contentField) {
+            if (contentField && contentField.children && contentField.children.length > 0) {
+                // it is guaranteed that grid fraction has only one block inside its content
                 const fractionBlockType = utils.getBlockElemName(contentField.children[0]);
                 this.parents.addGridFraction(elemModsMCol, fractionBlockType);
             }
@@ -92,6 +96,7 @@ class Processor {
     }
 
     goDeeper(jsonNode) {
+        if (!jsonNode.children) return;
         const contentField = utils.extractContent(jsonNode.children);
         if (contentField) {
             this.processNode(contentField);
@@ -156,8 +161,10 @@ class Processor {
 
     findWarningErrorsAfter(blockType) {
         // Check buttons sizes before exit from node
-        if (blockType === 'warning' && this.parents.hasWarningPreceding()) {
-            checkButtonsSizes(this.parents.getWarningEtalonTextSize(), this.parents.getWarningPreceding(), this.errorsList);
+        if (blockType === 'warning' && this.parents.hasWarning() && this.parents.hasWarningPreceding()) {
+            checkButtonsSizes(  this.parents.getWarningEtalonTextSize(), 
+                                this.parents.getWarningPreceding(), 
+                                this.errorsList);
         }
     }
 
@@ -181,7 +188,7 @@ class Processor {
 	}
 	
 	findGridErrorsAfter(blockType) {
-		if (blockType === 'grid') {
+		if (blockType === 'grid' && this.parents.hasGrid()) {
 			checkGrid(this.parents, this.errorsList);
 		}
 	}

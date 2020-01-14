@@ -10,8 +10,7 @@ const errors = require('./../errors.js');
 function checkTextSize(modsSize, etalonSize, loc, errorsList) {
     if (!modsSize 
         || modsSize !== etalonSize) {
-            const newError = errors.getError(errors.ER_WARN_TXT_NOT_EQ, loc);
-            errorsList.pushIfNotExist(newError);
+            errorsList.pushIfNotExist(errors.getError(errors.ER_WARN_TXT_NOT_EQ, loc));
     }                 
 }
 

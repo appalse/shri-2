@@ -62,10 +62,12 @@ class Parents {
     hasH2Headings() { return this.heading.h2.length > 0; }
     hasH3Headings() { return this.heading.h3.length > 0; }
 
+    hasGrid() { return this.grid !== undefined; }
+
     updateWarning(nodeLocation) {
         if (this.warning) {
-            this.warning['etalonTextSize'] = undefined;
-            this.warning['preceding'] = [];
+            this.warning.etalonTextSize = undefined;
+            this.warning.preceding = [];
             copyLocation(nodeLocation, this.warning.loc);		
         } else {
             let newParent = {
@@ -80,8 +82,8 @@ class Parents {
 
     updateGrid(modsMColumns, jsonNode) {
         if (this.grid) {
-            this.grid['mColumns'] = modsMColumns;
-            this.grid['marketingWidth'] = 0;
+            this.grid.mColumns = modsMColumns;
+            this.grid.marketingWidth = 0;
             copyLocation(jsonNode.loc, this.grid.loc);		
         } else {
             let newParent = {
@@ -110,15 +112,14 @@ class Parents {
         }
 	}
 
-    addWarningPreceding(nodeLocation, blockName, modSize) {
-        if(!this.warning) return; // TODO а надо ли?
+    addWarningPreceding(nodeLocation, blockName, modsSize) {
         let newPreceding = {
             'block': blockName,
             'loc': { 'start': {'line': 0, 'column': 0}, 'end': {'line': 0, 'column': 0}}
         };
         copyLocation(nodeLocation, newPreceding.loc);
-        newPreceding['size'] = modSize;
-        this.warning['preceding'].push(newPreceding);
+        newPreceding['size'] = modsSize;
+        this.warning.preceding.push(newPreceding);
     }
     
     addWarningEtalonTextSize(modsSize) {
@@ -126,7 +127,7 @@ class Parents {
             return; // etalon text size has already set
         }
         if (modsSize) {
-            this.warning['etalonTextSize'] = modsSize;
+            this.warning.etalonTextSize = modsSize;
         } 
     }
 

@@ -23,7 +23,7 @@ function checkButtonSize(precedingNode, etalonSize, errorsList) {
 
 function checkButtonsSizes(etalonSize, warningPrecedings, errorsList) {
     warningPrecedings.forEach(precedingNode => {
-        if (precedingNode.block === 'button') {
+        if (precedingNode && precedingNode.block === 'button') {
             checkButtonSize(precedingNode, etalonSize, errorsList);
         }
     });

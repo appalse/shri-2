@@ -4,23 +4,29 @@
 function getBlockElemName(node) {
     let block = '';
     let elem = '';
+    if (!node.children) return undefined;
     node.children.forEach(element =>  {
-        if (element.key.value === 'block') {
-            block = element.value.value;
-        }
-        if (element.key.value === 'elem') {
-            elem = element.value.value;
+        if (element && element.key && element.value) {
+            if (element.key.value === 'block') {
+                block = element.value.value;
+            }
+            if (element.key.value === 'elem') {
+                elem = element.value.value;
+            }
         }
     });
     return (block && elem) 
-                        ? block + '__' + elem
-                        : (block ? block : undefined); 
+                ? block + '__' + elem
+                : (block ? block : undefined); 
 }
 
 function isSomeBlock(nodeChildren, blockName) {
-	return nodeChildren.some(element => 
-								element.key.value === 'block' 
-								&& element.value.value === blockName);
+    if (!nodeChildren) return false;
+	return nodeChildren.some(element => {
+        return element && element.key && element.value 
+                ? (element.key.value === 'block' && element.value.value === blockName) 
+                : false;
+    });
 }
 
 function isTextBlock(node) {
@@ -31,13 +37,23 @@ function isButtonBlock(node) {
 	return isSomeBlock(node.children, 'button');
 }
 
-function extractModsField(node, fieldKey, fieldName) {
-	let modsIndex = node.children.findIndex(field => field.key.value === fieldKey);
-	if (modsIndex === -1) return undefined;
-	let fieldValue = node.children[modsIndex].value.children.find(modsField => 
-														modsField.key.value === fieldName);
-    if (fieldValue) {
-		return fieldValue.value.value;
+function extractModsField(node, fieldKey, fieldValue) {
+    if (!node.children) return undefined;
+	let modsIndex = node.children.findIndex(field => {
+        return field && field.key
+                ? (field.key.value === fieldKey) 
+                : false;
+    });
+    if (modsIndex === -1 
+        || !node.children[modsIndex].value 
+        || !node.children[modsIndex].value.children ) return undefined;
+	let fieldName = node.children[modsIndex].value.children.find(modsField => {
+        return modsField && modsField.key
+                    ? (modsField.key.value === fieldValue)
+                    : false
+    });
+    if (fieldName) {
+		return fieldName.value.value;
 	}
 }
 
@@ -50,33 +66,34 @@ function extractModsSize(node) {
 }
 
 function getTextBlockSize(node) {
-	if (node.type !== 'Object') throw 'Object is expected, but ' + node.type + ' is found';
+	if (node.type !== 'Object') return undefined;
 	if (isTextBlock(node)) {
 		return extractModsSize(node);
 	}
 }
 
 function getButtonSize(node) {
-	if (node.type !== 'Object') throw 'Object is expected, but ' + node.type + ' is found';
+	if (node.type !== 'Object') return undefined;
 	if (isButtonBlock(node)) {
 		return extractModsSize(node);
 	}
 }
 
 function getGridMColumns(blockType, node) {
-	if (node.type !== 'Object') throw 'Object is expected, but ' + node.type + ' is found';
+	if (node.type !== 'Object') return undefined;
 	if (blockType === 'grid') {
 		return extractModsField(node, 'mods', 'm-columns');
 	}
 }
 
 function extractContent(nodeFields) {
-	let contentFields = nodeFields.filter(element => 
-								element.key.value === 'content');
-	if (contentFields.length === 0) return undefined;
-	if (contentFields.length > 1) {
-		throw 'Block has more than 1 "content" field';
-	}
+    if (!nodeFields) return undefined;
+    let contentFields = nodeFields.filter(element => {
+        return element && element.key
+                    ? (element.key.value === 'content')
+                    : false
+    });
+	if (contentFields.length !== 1) return undefined;
 	return contentFields[0].value;
 }
 
