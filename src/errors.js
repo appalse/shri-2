@@ -1,6 +1,5 @@
-'use strict'
+'use strict';
 
-/* Для быстрого доступа к информации об ошибке используется мапа  */
 const ER_WARN_TXT_NOT_EQ = 'ER_WARN_TXT_NOT_EQ';
 const ER_WARN_BTN_SIZE = 'ER_WARN_BTN_SIZE';
 const ER_WARN_BTN_POS = 'ER_WARN_BTN_POS';
@@ -12,69 +11,69 @@ const ER_GRID_MUCH_MARKETING = 'ER_GRID_MUCH_MARKETING';
 
 const CODES = {
     ER_WARN_TXT_NOT_EQ: {
-        "id": ER_WARN_TXT_NOT_EQ,
-        "type": "WARNING",
-        "code": "TEXT_SIZES_SHOULD_BE_EQUAL",
-        "text": "Тексты в блоке warning должны быть одного размера и должны быть заданы"
+        id: ER_WARN_TXT_NOT_EQ,
+        type: 'WARNING',
+        code: 'TEXT_SIZES_SHOULD_BE_EQUAL',
+        text: 'Тексты в блоке warning должны быть одного размера и должны быть заданы'
     },
     ER_WARN_BTN_SIZE: {
-        "id": ER_WARN_BTN_SIZE,
-        "type": "WARNING",
-        "code": "INVALID_BUTTON_SIZE",
-        "text": "Размер кнопки блока warning должен быть на 1 шаг больше эталонного"
+        id: ER_WARN_BTN_SIZE,
+        type: 'WARNING',
+        code: 'INVALID_BUTTON_SIZE',
+        text: 'Размер кнопки блока warning должен быть на 1 шаг больше эталонного'
     },
     ER_WARN_BTN_POS: {
-        "id": ER_WARN_BTN_POS,
-        "type": "WARNING",
-        "code": "INVALID_BUTTON_POSITION",
-        "text": "Блок button в блоке warning не может находиться перед блоком placeholder на том же или более глубоком уровне вложенности"
+        id: ER_WARN_BTN_POS,
+        type: 'WARNING',
+        code: 'INVALID_BUTTON_POSITION',
+        text: 'Блок button в блоке warning не может находиться перед блоком placeholder на том же или более глубоком уровне вложенности'
     },
     ER_WARN_PLACEHOLDER_SIZE: {
-        "id": ER_WARN_PLACEHOLDER_SIZE,
-        "type": "WARNING",
-        "code": "INVALID_PLACEHOLDER_SIZE",
-        "text": "Некорретный размер блока placeholder в блоке warning, допустимые значения: s, m, l"
+        id: ER_WARN_PLACEHOLDER_SIZE,
+        type: 'WARNING',
+        code: 'INVALID_PLACEHOLDER_SIZE',
+        text: 'Некорретный размер блока placeholder в блоке warning, допустимые значения: s, m, l'
     },
     ER_TXT_H1: {
-        "id": ER_TXT_H1,
-        "type": "TEXT",
-        "code": "SEVERAL_H1",
-        "text": "Заголовок первого уровня должен быть единственным на странице"
+        id: ER_TXT_H1,
+        type: 'TEXT',
+        code: 'SEVERAL_H1',
+        text: 'Заголовок первого уровня должен быть единственным на странице'
     },
     ER_TXT_H2: {
-        "id": ER_TXT_H2,
-        "type": "TEXT",
-        "code": "INVALID_H2_POSITION",
-        "text": "Заголовок второго уровня не может находиться перед заголовком первого уровня на том же или более глубоком уровне вложенности"
+        id: ER_TXT_H2,
+        type: 'TEXT',
+        code: 'INVALID_H2_POSITION',
+        text: 'Заголовок второго уровня не может находиться перед заголовком первого уровня на том же или более глубоком уровне вложенности'
     },
     ER_TXT_H3: {
-        "id": ER_TXT_H3,
-        "type": "TEXT",
-        "code": "INVALID_H3_POSITION",
-        "text": "Заголовок третьего уровня не может находиться перед заголовком второго уровня на том же или более глубоком уровне вложенности"
+        id: ER_TXT_H3,
+        type: 'TEXT',
+        code: 'INVALID_H3_POSITION',
+        text: 'Заголовок третьего уровня не может находиться перед заголовком второго уровня на том же или более глубоком уровне вложенности'
     },
     ER_GRID_MUCH_MARKETING: {
-        "id": ER_GRID_MUCH_MARKETING,
-        "type": "GRID",
-        "code": "TOO_MUCH_MARKETING_BLOCKS",
-        "text": "Маркетинговые блоки занимают больше половины или ровно половину от всех колонок блока grid"
+        id: ER_GRID_MUCH_MARKETING,
+        type: 'GRID',
+        code: 'TOO_MUCH_MARKETING_BLOCKS',
+        text: 'Маркетинговые блоки занимают больше половины или ровно половину от всех колонок блока grid'
     }
 };
 
 function getError(errorCode, loc) {
     const e = CODES[errorCode];
     if (!e) {
-        throw 'This error code: ' + errorCode + ' was not processed in getError function';
+        throw new Error('This error code: ' + errorCode + ' was not processed in getError function');
     }
-    const fullErrorCode = e.type + '.' + e.code;	
+    const fullErrorCode = e.type + '.' + e.code;
     return {
-        "code": fullErrorCode,
-        "error": e.text,
-        "location": {
-            "start": { "column": loc.start.column, "line": loc.start.line },
-            "end": { "column": loc.end.column, "line": loc.end.line }
+        code: fullErrorCode,
+        error: e.text,
+        location: {
+            start: { column: loc.start.column, line: loc.start.line },
+            end: { column: loc.end.column, line: loc.end.line }
         }
-    }
+    };
 }
 
 module.exports = {
@@ -87,4 +86,4 @@ module.exports = {
     ER_TXT_H3,
     ER_GRID_MUCH_MARKETING,
     getError
-}
+};

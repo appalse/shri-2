@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 /* Допустимые размеры для блока placeholder в блоке warning (значение модификатора size): s, m, l */
 

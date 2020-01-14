@@ -1,6 +1,6 @@
-'use strict'
+'use strict';
 
-/* Блок button в блоке warning не может находиться перед блоком placeholder 
+/* Блок button в блоке warning не может находиться перед блоком placeholder
 на том же или более глубоком уровне вложенности */
 
 const errors = require('./../errors.js');
