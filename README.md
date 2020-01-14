@@ -10,10 +10,10 @@ https://github.com/appalse/shri-2/blob/master/README-Plan.md
 
 | Папка | Описание |
 | ----- | -------- |
-| build | бандл с результатами сборки |
-| mochawesome-report | результаты автотестов, mochawesome.html открывается локально и отображает последний прогон |
-| src   | исходный код        |
-| test  | тесты на mocha+chai |
+| .\build\ | бандл с результатами сборки |
+| .\mochawesome-report\ | результаты автотестов, **mochawesome.html** открывается локально и отображает последний прогон |
+| .\src\   | исходный код        |
+| .\test\  | тесты на mocha+chai |
 
 
 ## Сборка и тесты
