@@ -96,6 +96,17 @@ function extractContent(nodeFields) {
     return contentFields[0].value;
 }
 
+function extractMix(nodeFields) {
+    if (!nodeFields) return undefined;
+    const mixFields = nodeFields.filter(element => {
+        return element && element.key
+            ? (element.key.value === 'mix')
+            : false;
+    });
+    if (mixFields.length !== 1) return undefined;
+    return mixFields[0].value;
+}
+
 function getElemModsMCol(node) {
     return extractModsField(node, 'elemMods', 'm-col');
 }
@@ -108,5 +119,6 @@ module.exports = {
     getButtonSize,
     getGridMColumns,
     extractContent,
+    extractMix,
     getElemModsMCol
 };

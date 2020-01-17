@@ -100,6 +100,10 @@ class Processor {
         if (contentField) {
             this.processNode(contentField);
         }
+        const mixField = utils.extractMix(jsonNode.children);
+        if (mixField) {
+            this.processNode(mixField);
+        }
     }
 
     // SAVING AND RESTORING PARENTS
