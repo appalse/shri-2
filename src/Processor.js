@@ -37,8 +37,6 @@ class Processor {
             this.processArray(jsonNode.children);
         } else if (jsonNode.type === 'Object') {
             this.processObject(jsonNode, this.createHeadingSiblings());
-        } else {
-            throw new Error('Object or Array is expected, but ' + jsonNode.type + ' is found');
         }
     }
 
@@ -47,11 +45,11 @@ class Processor {
         const headingSiblings = this.createHeadingSiblings();
         // process nodes one by one, going to the deepest level in every node
         jsonArray.forEach(jsonNode => {
-            if (!jsonNode) return;
-            if (jsonNode.type === 'Array' && jsonNode.children && jsonNode.children.length > 0) {
-                this.processObject(jsonNode.children[0], headingSiblings);
-            } else {
+            if (jsonNode && jsonNode.type === 'Object') {
                 this.processObject(jsonNode, headingSiblings);
+            }
+            if (jsonNode && jsonNode.type === 'Array' && jsonNode.children && jsonNode.children.length > 0) {
+                this.processObject(jsonNode.children[0], headingSiblings);
             }
         });
     }
