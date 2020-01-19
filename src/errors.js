@@ -63,7 +63,14 @@ const CODES = {
 function getError(errorCode, loc) {
     const e = CODES[errorCode];
     if (!e) {
-        throw new Error('This error code: ' + errorCode + ' was not processed in getError function');
+        return {
+            code: 'Unknown',
+            error: 'Unknown',
+            location: {
+                start: { column: 1, line: 1 },
+                end: { column: 1, line: 1 }
+            }
+        };
     }
     const fullErrorCode = e.type + '.' + e.code;
     return {
